@@ -16,12 +16,12 @@
     <![endif]-->
 </head>
 <body>
-    <h1 style="font-family:微軟正黑體;" >查詢訂單</h1>
+    <h1 style="font-family:微軟正黑體;">查詢訂單</h1>
     <!-- jQuery (Bootstrap 所有外掛均需要使用) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- 依需要參考已編譯外掛版本（如下），或各自獨立的外掛版本 -->
     <script src="js/bootstrap.min.js"></script>
-    <form  class="" role=" form">
+    <form action="/Order" method="post" role="form">
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
@@ -90,14 +90,14 @@
                 </div>
             </div>
 
-            <div class="col-md-1 col-md-offset-*">
+            <div class="col-md-1">
                 <div class="form-group">
                     <label></label>
                     <button type="" class="btn btn-warning form-control">清除</button>
                 </div>
             </div>
 
-            <div class="col-md-1 col-md-offset-*">
+            <div class="col-md-1">
                 <div class="form-group">
                     <label></label>
                     <button class="btn  btn-success">新增訂單</button>
@@ -108,5 +108,31 @@
 
 
     </form>
+    <hr style="display: block;height: 2px; border: 0;border-top: 3px solid #0000CC;margin: 1em 0; padding: 0;">
+    <table class="table table-striped">
+        <tr>
+            <th class="col-md-2">訂單編號</th>
+            <th class="col-md-2">客戶名稱</th>
+            <th class="col-md-2">訂購日期</th>
+            <th class="col-md-2">發貨日期</th>
+            <th class="col-md-2"></th>
+        </tr>
+        <tr>
+            <td>test</td>
+            <td>test</td>
+            <td>test</td>
+            <td>test</td>
+            <td>
+                <div class="row">
+                    <button class="btn btn-warning">修改</button>
+                    <button class="btn btn-danger">刪除</button>
+                </div>
+            </td>
+        </tr>
+
+
+    </table>
+
+
 </body>
 </html>
