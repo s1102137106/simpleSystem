@@ -11,6 +11,7 @@ namespace simpleSystem.Controllers
         // GET: Home
         public ActionResult Index()
         {
+            //index
             return View();
         }
     }

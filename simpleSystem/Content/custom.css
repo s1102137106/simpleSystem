@@ -1,0 +1,15 @@
+﻿HTML, BODY {
+    width: 100%;
+    height: 100%;
+    background-image: url(img/bk10.jpg);
+    background-repeat: no-repeat;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    margin: auto;
+    background-size: 100% 100%;
+    
+}
+body
+{
+    font-family:"微軟正黑體","Microsoft Jhenghei","Helvetica Neue","Helvetica",sans-serif,serif;
+}

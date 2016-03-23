@@ -7,9 +7,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap 101 Template</title>
     <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
     <!-- HTML5 shim and Respond.js 讓 IE8 支援 HTML5 元素與媒體查詢 -->
     <!-- 警告：Respond.js 無法在 file:// 協定下運作 -->
     <!--[if lt IE 9]>
@@ -18,10 +16,97 @@
     <![endif]-->
 </head>
 <body>
-    <h1>Hello, world!</h1>
+    <h1 style="font-family:微軟正黑體;" >查詢訂單</h1>
     <!-- jQuery (Bootstrap 所有外掛均需要使用) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!-- 依需要參考已編譯外掛版本（如下），或各自獨立的外掛版本 -->
     <script src="js/bootstrap.min.js"></script>
+    <form  class="" role=" form">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>訂單編號</label>
+                    <input type="text" class="form-control" id="CustId" placeholder="請輸入要查詢的訂單編號">
+                </div>
+            </div>
+            <div class="col-md-4 col-md-offset-*">
+                <div class="form-group">
+                    <label>訂單編號</label>
+                    <input type="text" class="form-control" id="CustId" placeholder="請輸入要查詢的訂單編號">
+                </div>
+            </div>
+            <div class="col-md-4 col-md-offset-*">
+                <div class="form-group">
+                    <label>客戶名稱</label>
+                    <input type="text" class="form-control" id="CustName" placeholder="請輸入要查詢的客戶名稱">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>負責員工</label>
+                    <select class="form-control">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4 col-md-offset-*">
+                <div class="form-group">
+                    <label>出貨公司</label>
+                    <select class="form-control">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-4 col-md-offset-*">
+                <div class="form-group">
+                    <label>訂購日期</label>
+                    <input type="date" class="form-control" id="EmpName">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>需要日期</label>
+                    <input type="date" class="form-control" id="EmpName">
+                </div>
+            </div>
+            <div class="col-md-1 col-md-offset-4">
+                <div class="form-group">
+                    <label></label>
+                    <button type="submit" class="btn btn-primary form-control">查詢</button>
+                </div>
+            </div>
+
+            <div class="col-md-1 col-md-offset-*">
+                <div class="form-group">
+                    <label></label>
+                    <button type="" class="btn btn-warning form-control">清除</button>
+                </div>
+            </div>
+
+            <div class="col-md-1 col-md-offset-*">
+                <div class="form-group">
+                    <label></label>
+                    <button class="btn  btn-success">新增訂單</button>
+                </div>
+            </div>
+
+        </div>
+
+
+    </form>
 </body>
 </html>
