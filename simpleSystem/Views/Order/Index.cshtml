@@ -48,11 +48,10 @@
                 <div class="form-group">
                     <label>負責員工</label>
                     <select class="form-control">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
+                        @foreach (var EmpId in (List<SelectListItem>)ViewBag.EmpIds)
+                        {
+                            <option>@EmpId.Text</option>
+                        }
                     </select>
                 </div>
             </div>
@@ -60,11 +59,10 @@
                 <div class="form-group">
                     <label>出貨公司</label>
                     <select class="form-control">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                        <option>4</option>
-                        <option>5</option>
+                        @foreach (var ShipperId in (List<SelectListItem>)ViewBag.ShipperIds)
+                        {
+                            <option>@ShipperId.Text</option>
+                        }
                     </select>
                 </div>
             </div>
@@ -117,18 +115,24 @@
             <th class="col-md-2">發貨日期</th>
             <th class="col-md-2"></th>
         </tr>
-        <tr>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>
-                <div class="row">
-                    <button class="btn btn-warning">修改</button>
-                    <button class="btn btn-danger">刪除</button>
-                </div>
-            </td>
-        </tr>
+
+           @foreach (var orders in (List<Models.Order>)ViewBag.Data)
+           {
+            <tr>
+                <td>@orders.CustId</td>
+                <td>@orders.CustName</td>
+                <td>@orders.Orderdate</td>
+                <td>@orders.ShippedDate</td>
+                <td>
+                    <div class="row">
+                        <button class="btn btn-warning">修改</button>
+                        <button class="btn btn-danger">刪除</button>
+                    </div>
+                </td>
+            </tr>
+           }
+
+       
 
 
     </table>
