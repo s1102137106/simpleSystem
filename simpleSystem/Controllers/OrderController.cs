@@ -47,13 +47,40 @@ namespace eSale.Controllers
             return View();
         }
 
+        /// <summary>
+        /// 有查詢條件
+        /// </summary>
+        /// <param name="condition"></param>
+        /// <returns></returns>
         [HttpPost()]
         public ActionResult Index(Models.Order condition)
         {
             Models.OrderService orderService = new Models.OrderService();
             List<Models.Order> orderList = new List<Models.Order>();
-            orderList = orderService.GetOrderByCondtioin(condition);
+            Models.Order nullCondition = new Models.Order();
+            //查詢條件設定成空的
+            orderList = orderService.GetOrderByCondtioin(nullCondition);
             ViewBag.Data = orderList;
+
+            List<SelectListItem> EmpId = new List<SelectListItem>();//業務(員工)代號
+            List<SelectListItem> ShipperId = new List<SelectListItem>();//出貨公司代號
+
+            foreach (Models.Order order in orderList)
+            {
+                EmpId.Add(new SelectListItem
+                {
+                    Text = order.EmpId.ToString(),
+                    Value = order.EmpId.ToString()
+                });
+
+                ShipperId.Add(new SelectListItem
+                {
+                    Text = order.ShipperId.ToString(),
+                    Value = order.ShipperId.ToString()
+                });
+            }
+            ViewBag.EmpIds = EmpId;
+            ViewBag.ShipperIds = ShipperId;
             return View();
         }
 

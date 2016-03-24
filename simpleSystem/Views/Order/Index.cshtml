@@ -1,6 +1,9 @@
-﻿@{
+﻿@model Models.Order
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,63 +25,63 @@
     <!-- 依需要參考已編譯外掛版本（如下），或各自獨立的外掛版本 -->
     <script src="js/bootstrap.min.js"></script>
     <form action="/Order" method="post" role="form">
+       
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label>訂單編號</label>
-                    <input type="text" class="form-control" id="CustId" placeholder="請輸入要查詢的訂單編號">
+                    <label>@Html.LabelFor(model => model.OrderDd )</label>
+                    <input type="text" class="form-control" id="OrderDd" name="OrderDd" placeholder="請輸入要查詢的訂單編號">
                 </div>
             </div>
             <div class="col-md-4 col-md-offset-*">
                 <div class="form-group">
-                    <label>訂單編號</label>
-                    <input type="text" class="form-control" id="CustId" placeholder="請輸入要查詢的訂單編號">
+                    <label>@Html.LabelFor(model => model.CustName)</label>
+                    <input type="text" class="form-control" id="CustName" name="CustName" placeholder="請輸入要查詢的客戶名稱">
                 </div>
             </div>
             <div class="col-md-4 col-md-offset-*">
-                <div class="form-group">
-                    <label>客戶名稱</label>
-                    <input type="text" class="form-control" id="CustName" placeholder="請輸入要查詢的客戶名稱">
-                </div>
+                <label> @Html.LabelFor(model => model.EmpId)</label>
+                <select class="form-control">
+                    @foreach (var EmpId in (List<SelectListItem>)ViewBag.EmpIds)
+                    {
+                        <option name="EmpId" value="@EmpId.Value">@EmpId.Text</option>
+                    }
+                </select>
             </div>
         </div>
-
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label>負責員工</label>
-                    <select class="form-control">
-                        @foreach (var EmpId in (List<SelectListItem>)ViewBag.EmpIds)
-                        {
-                            <option>@EmpId.Text</option>
-                        }
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-4 col-md-offset-*">
-                <div class="form-group">
-                    <label>出貨公司</label>
+                    <label>@Html.LabelFor(model => model.ShipperId)</label>
                     <select class="form-control">
                         @foreach (var ShipperId in (List<SelectListItem>)ViewBag.ShipperIds)
                         {
-                            <option>@ShipperId.Text</option>
+                            <option name="ShipperId" value="@ShipperId.Value">@ShipperId.Text</option>
                         }
                     </select>
+                </div>
+
+            </div>
+            <div class="col-md-4 col-md-offset-*">
+                <div class="form-group">
+                    <div class="form-group">
+                        <label>@Html.LabelFor(model => model.Orderdate)</label>
+                        <input type="date" class="form-control" id="Orderdate" name="Orderdate">
+                    </div>
                 </div>
             </div>
             <div class="col-md-4 col-md-offset-*">
                 <div class="form-group">
-                    <label>訂購日期</label>
-                    <input type="date" class="form-control" id="EmpName">
+                    <label>@Html.LabelFor(model => model.ShippedDate)</label>
+                    <input type="date" class="form-control" id="ShippedDate" name="ShippedDate">
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
-                    <label>需要日期</label>
-                    <input type="date" class="form-control" id="EmpName">
+                    <label>@Html.LabelFor(model => model.RequireDdate)</label>
+                    <input type="date" class="form-control" id="RequireDdate" name="RequireDdate">
                 </div>
             </div>
             <div class="col-md-1 col-md-offset-4">
@@ -87,24 +90,20 @@
                     <button type="submit" class="btn btn-primary form-control">查詢</button>
                 </div>
             </div>
-
             <div class="col-md-1">
                 <div class="form-group">
                     <label></label>
                     <button type="" class="btn btn-warning form-control">清除</button>
                 </div>
             </div>
-
             <div class="col-md-1">
                 <div class="form-group">
                     <label></label>
                     <button class="btn  btn-success">新增訂單</button>
                 </div>
             </div>
-
         </div>
-
-
+        
     </form>
     <hr style="display: block;height: 2px; border: 0;border-top: 3px solid #0000CC;margin: 1em 0; padding: 0;">
     <table class="table table-striped">
@@ -115,9 +114,8 @@
             <th class="col-md-2">發貨日期</th>
             <th class="col-md-2"></th>
         </tr>
-
-           @foreach (var orders in (List<Models.Order>)ViewBag.Data)
-           {
+        @foreach (var orders in (List<Models.Order>)ViewBag.Data)
+        {
             <tr>
                 <td>@orders.CustId</td>
                 <td>@orders.CustName</td>
@@ -130,13 +128,10 @@
                     </div>
                 </td>
             </tr>
-           }
-
-       
+        }
 
 
     </table>
-
 
 </body>
 </html>
