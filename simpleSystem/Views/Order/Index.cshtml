@@ -42,6 +42,7 @@
             <div class="col-md-4 col-md-offset-*">
                 <label> @Html.LabelFor(model => model.EmpId)</label>
                 <select class="form-control">
+                    <option name="EmpId" value="0"></option>
                     @foreach (var Emp in (List<SelectListItem>)ViewBag.Emps)
                     {
                         <option name="EmpId" value="@Emp.Value">@Emp.Text</option>
@@ -54,6 +55,7 @@
                 <div class="form-group">
                     <label>@Html.LabelFor(model => model.ShipperId)</label>
                     <select class="form-control">
+                        <option name="ShipperId" value="0"></option>
                         @foreach (var ShipperId in (List<SelectListItem>)ViewBag.ShipperIds)
                         {
                             <option name="ShipperId" value="@ShipperId.Value">@ShipperId.Text</option>

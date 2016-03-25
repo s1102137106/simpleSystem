@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -22,27 +23,41 @@ namespace eSale.Controllers
             simpleSystem.ViewModels.Order nullCondition = new simpleSystem.ViewModels.Order();
             //查詢條件設定成空的
             orderList = orderService.GetOrderByCondtioin(nullCondition);
+
+            var empList = orderService.GetEmp();
+            var shipperList = orderService.GetShipper();
+
             ViewBag.Data = orderList;
 
 
             List<SelectListItem> ShipperId = new List<SelectListItem>();//出貨公司代號
             List<SelectListItem> Emp = new List<SelectListItem>();//value:empId text:  empName
 
-
-            foreach (simpleSystem.ViewModels.Order order in orderList)
+           
+            System.Text.StringBuilder fullName = new StringBuilder();
+            
+            foreach (var emp in empList)
             {
+                fullName.Append(emp.FirstName);
+                fullName.Append(" ");
+                fullName.Append(emp.LastName);
                 Emp.Add(new SelectListItem
                 {
-                    Text = order.EmpName.ToString(),
-                    Value = order.EmpId.ToString()
+                    Text = fullName.ToString(),
+                    Value = emp.EmployeeID.ToString()
                 });
+                fullName.Clear();
+            }
 
+            foreach (var shipper in shipperList)
+            {
                 ShipperId.Add(new SelectListItem
                 {
-                    Text = order.ShipperName.ToString(),
-                    Value = order.ShipperId.ToString()
+                    Text = shipper.CompanyName.ToString(),
+                    Value = shipper.ShipperID.ToString()
                 });
             }
+            
             ViewBag.Emps = Emp;
             ViewBag.ShipperIds = ShipperId;
             return View();
@@ -54,35 +69,49 @@ namespace eSale.Controllers
         /// <param name="condition"></param>
         /// <returns></returns>
         [HttpPost()]
-        public ActionResult Index(simpleSystem.Models.Order condition)
+        public ActionResult Index(simpleSystem.ViewModels.Order condition)
         {
             Models.OrderService orderService = new Models.OrderService();
             List<simpleSystem.ViewModels.Order> orderList = new List<simpleSystem.ViewModels.Order>();
             simpleSystem.ViewModels.Order nullCondition = new simpleSystem.ViewModels.Order();
             //查詢條件設定成空的
-            orderList = orderService.GetOrderByCondtioin(nullCondition);
+            orderList = orderService.GetOrderByCondtioin(condition);
+
+            var empList = orderService.GetEmp();
+            var shipperList = orderService.GetShipper();
+
             ViewBag.Data = orderList;
 
-          
+
             List<SelectListItem> ShipperId = new List<SelectListItem>();//出貨公司代號
             List<SelectListItem> Emp = new List<SelectListItem>();//value:empId text:  empName
 
 
-            foreach (simpleSystem.ViewModels.Order order in orderList)
+            System.Text.StringBuilder fullName = new StringBuilder();
+
+            foreach (var emp in empList)
             {
+                fullName.Append(emp.FirstName);
+                fullName.Append(" ");
+                fullName.Append(emp.LastName);
                 Emp.Add(new SelectListItem
                 {
-                    Text = order.EmpName.ToString(),
-                    Value = order.EmpId.ToString()
+                    Text = fullName.ToString(),
+                    Value = emp.EmployeeID.ToString()
                 });
-               
+                fullName.Clear();
+            }
+
+            foreach (var shipper in shipperList)
+            {
                 ShipperId.Add(new SelectListItem
                 {
-                    Text = order.ShipperName.ToString(),
-                    Value = order.ShipperId.ToString()
+                    Text = shipper.CompanyName.ToString(),
+                    Value = shipper.ShipperID.ToString()
                 });
             }
-            ViewBag.Emp = Emp;
+
+            ViewBag.Emps = Emp;
             ViewBag.ShipperIds = ShipperId;
             return View();
         }
