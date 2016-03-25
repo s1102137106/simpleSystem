@@ -1,114 +1,64 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
-
-namespace Models
+namespace simpleSystem.Models
 {
-    public class Order
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    [Table("Sales.Orders")]
+    public partial class Order
     {
-        /// <summary>
-        /// 訂單編號
-        /// </summary>
-        
-        [DisplayName("訂單編號")]
-        [Required()]
-        public int OrderDd {get;set;}
+        public Order()
+        {
+            OrderDetails = new HashSet<OrderDetail>();
+        }
 
-        /// <summary>
-        /// 客戶代號
-        /// </summary>
-        [MaxLength(3)]
-        [DisplayName("客戶代號")]
-        public string CustId {get;set;}
+        public int OrderID { get; set; }
 
-        /// <summary>
-        /// 客戶名稱
-        /// </summary>
-        [DisplayName("客戶名稱")]
-        public string CustName { get; set; }
+        public int? CustomerID { get; set; }
 
-        /// <summary>
-        /// 業務(員工)代號
-        /// </summary>
-        [DisplayName("業務(員工)代號")]
-        public int EmpId {get;set;}
+        public int EmployeeID { get; set; }
 
-        /// <summary>
-        /// 業務(員工姓名)
-        /// </summary>
-        [DisplayName("業務(員工姓名)")]
-        public string EmpName { get; set; }
+        public DateTime OrderDate { get; set; }
 
-        /// <summary>
-        /// 訂單日期
-        /// </summary>
-        [DisplayName("訂單日期")]
-        public DateTime ? Orderdate {get;set;}
+        public DateTime RequiredDate { get; set; }
 
-        /// <summary>
-        /// 需要日期
-        /// </summary>
-        [DisplayName("需要日期")]
-        public DateTime? RequireDdate { get; set; }
+        public DateTime? ShippedDate { get; set; }
 
-        /// <summary>
-        /// 出貨日期
-        /// </summary> 
-        [DisplayName("出貨日期")]
-        public DateTime?  ShippedDate { get; set; }
+        public int ShipperID { get; set; }
 
-        /// <summary>
-        /// 出貨公司代號
-        /// </summary>
-        [DisplayName("出貨公司代號")]
-        public int ShipperId {get;set;}
+        [Column(TypeName = "money")]
+        public decimal Freight { get; set; }
 
-        /// <summary>
-        /// 出貨公司名稱
-        /// </summary>
-        [DisplayName("出貨公司名稱")]
-        public int ShipperName { get; set; }
+        [Required]
+        [StringLength(40)]
+        public string ShipName { get; set; }
 
-        /// <summary>
-        /// 運費
-        /// </summary>
-        /// 
-        [Range(0,double.MaxValue)]
-        [DisplayName("運費")]
-        public double Freight {get;set;}
+        [Required]
+        [StringLength(60)]
+        public string ShipAddress { get; set; }
 
-        /// <summary>
-        /// 出貨說明
-        /// </summary>
-        public string ShipName {get;set;}
+        [Required]
+        [StringLength(15)]
+        public string ShipCity { get; set; }
 
-        /// <summary>
-        /// 出貨地址
-        /// </summary>
-        public string ShipAddress {get;set;}
+        [StringLength(15)]
+        public string ShipRegion { get; set; }
 
-        /// <summary>
-        /// 出貨程式
-        /// </summary>
-        public string ShipCity {get;set;}
+        [StringLength(10)]
+        public string ShipPostalCode { get; set; }
 
-        /// <summary>
-        /// 出貨地區
-        /// </summary>
-        public string ShipRegion {get;set;}
-
-        /// <summary>
-        /// 郵遞區號
-        /// </summary>
-        public string ShipPostalCode {get;set;}
-
-        /// <summary>
-        /// 出貨國家
-        /// </summary>
+        [Required]
+        [StringLength(15)]
         public string ShipCountry { get; set; }
+
+        public virtual Employee Employee { get; set; }
+
+        public virtual Customer Customer { get; set; }
+
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
+
+        public virtual Shipper Shipper { get; set; }
     }
 }

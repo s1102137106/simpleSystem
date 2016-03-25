@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using simpleSystem.Models;
 
 namespace Models
 {
@@ -12,7 +13,7 @@ namespace Models
         /// 新增訂單
         /// </summary>
         /// <param name="order"></param>
-        public void InsertOrder(Models.Order order)
+        public void InsertOrder(simpleSystem.Models.Order order)
         {
             //todo
         }
@@ -20,7 +21,7 @@ namespace Models
         /// 依照Id 取得訂單資料
         /// </summary>
         /// <returns></returns>
-        public Models.Order GetOrderById(string orderId)
+        public simpleSystem.Models.Order GetOrderById(string orderId)
         {
             //todo
             return new Order();
@@ -29,14 +30,34 @@ namespace Models
         /// 依照條件取得訂單資料
         /// </summary>
         /// <returns></returns>
-        public List<Models.Order> GetOrderByCondtioin(Models.Order order)
+        public List<simpleSystem.ViewModels.Order> GetOrderByCondtioin(simpleSystem.ViewModels.Order order)
         {
             //todo
-            List<Models.Order> result = new List<Order>();
-            Console.WriteLine(order);
+            List<simpleSystem.ViewModels.Order> result = new List<simpleSystem.ViewModels.Order>();
             //依照給的order資訊下條件
-            result.Add(new Order() { CustId = "001", CustName = "叡揚資訊", EmpId = 1, EmpName = "王小明", Orderdate = DateTime.Parse("2015/11/08"), ShippedDate=DateTime.Parse("2015/11/09") });
-            result.Add(new Order() { CustId = "002", CustName = "網軟資訊", EmpId = 2, EmpName = "李小華", Orderdate = DateTime.Parse("2015/11/01"), ShippedDate = DateTime.Parse("2015/11/09") });
+
+            SimpleDB db = new SimpleDB();
+            var a = db.Orders.Select(x => x.OrderID).ToList();
+            
+            /*
+             result = db.Orders.Select(x => new Order {
+                                                         CustId = x.CustId,
+                                                         CustName = x.CustName ,
+                                                         EmpId = x.EmpId,
+                                                         ShipperName = x.ShipperName,
+                                                         ShipperId = x.ShipperId,
+                                                         EmpName = x.EmpName,
+                                                         Orderdate = x.Orderdate,
+                                                         ShippedDate = x.ShippedDate
+                                                      } ).ToList();
+             */
+
+
+
+
+
+             result.Add(new simpleSystem.ViewModels.Order() { CustId = "001", CustName = "叡揚資訊", EmpId = 1, ShipperName = "哈哈公司", ShipperId = 12, EmpName = "王小明", Orderdate = DateTime.Parse("2015/11/08"), ShippedDate = DateTime.Parse("2015/11/09") });
+             result.Add(new simpleSystem.ViewModels.Order() { CustId = "002", CustName = "網軟資訊", EmpId = 2, ShipperName="嘻嘻公司",ShipperId=14, EmpName = "李小華", Orderdate = DateTime.Parse("2015/11/01"), ShippedDate = DateTime.Parse("2015/11/09") });
             return result;
         }
         /// <summary>
@@ -49,7 +70,7 @@ namespace Models
         /// <summary>
         /// 更新訂單
         /// </summary>
-        public void UpdateOrder(Models.Order order)
+        public void UpdateOrder(simpleSystem.Models.Order order)
         {
             //todo
         }

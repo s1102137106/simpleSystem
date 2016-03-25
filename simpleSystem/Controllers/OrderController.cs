@@ -18,32 +18,33 @@ namespace eSale.Controllers
         public ActionResult Index()
         {
             Models.OrderService orderService = new Models.OrderService();
-            List<Models.Order> orderList = new List<Models.Order>();
-            Models.Order nullCondition = new Models.Order();
+            List<simpleSystem.ViewModels.Order> orderList = new List<simpleSystem.ViewModels.Order>();
+            simpleSystem.ViewModels.Order nullCondition = new simpleSystem.ViewModels.Order();
             //查詢條件設定成空的
             orderList = orderService.GetOrderByCondtioin(nullCondition);
             ViewBag.Data = orderList;
 
-            List<SelectListItem> EmpId = new List<SelectListItem>();//業務(員工)代號
-            List<SelectListItem> ShipperId = new List<SelectListItem>();//出貨公司代號
 
-            foreach (Models.Order order in orderList)
+            List<SelectListItem> ShipperId = new List<SelectListItem>();//出貨公司代號
+            List<SelectListItem> Emp = new List<SelectListItem>();//value:empId text:  empName
+
+
+            foreach (simpleSystem.ViewModels.Order order in orderList)
             {
-                EmpId.Add(new SelectListItem
+                Emp.Add(new SelectListItem
                 {
-                    Text = order.EmpId.ToString(),
+                    Text = order.EmpName.ToString(),
                     Value = order.EmpId.ToString()
                 });
 
                 ShipperId.Add(new SelectListItem
                 {
-                    Text = order.ShipperId.ToString(),
+                    Text = order.ShipperName.ToString(),
                     Value = order.ShipperId.ToString()
                 });
             }
-            ViewBag.EmpIds = EmpId;
+            ViewBag.Emps = Emp;
             ViewBag.ShipperIds = ShipperId;
-
             return View();
         }
 
@@ -53,33 +54,35 @@ namespace eSale.Controllers
         /// <param name="condition"></param>
         /// <returns></returns>
         [HttpPost()]
-        public ActionResult Index(Models.Order condition)
+        public ActionResult Index(simpleSystem.Models.Order condition)
         {
             Models.OrderService orderService = new Models.OrderService();
-            List<Models.Order> orderList = new List<Models.Order>();
-            Models.Order nullCondition = new Models.Order();
+            List<simpleSystem.ViewModels.Order> orderList = new List<simpleSystem.ViewModels.Order>();
+            simpleSystem.ViewModels.Order nullCondition = new simpleSystem.ViewModels.Order();
             //查詢條件設定成空的
             orderList = orderService.GetOrderByCondtioin(nullCondition);
             ViewBag.Data = orderList;
 
-            List<SelectListItem> EmpId = new List<SelectListItem>();//業務(員工)代號
+          
             List<SelectListItem> ShipperId = new List<SelectListItem>();//出貨公司代號
+            List<SelectListItem> Emp = new List<SelectListItem>();//value:empId text:  empName
 
-            foreach (Models.Order order in orderList)
+
+            foreach (simpleSystem.ViewModels.Order order in orderList)
             {
-                EmpId.Add(new SelectListItem
+                Emp.Add(new SelectListItem
                 {
-                    Text = order.EmpId.ToString(),
+                    Text = order.EmpName.ToString(),
                     Value = order.EmpId.ToString()
                 });
-
+               
                 ShipperId.Add(new SelectListItem
                 {
-                    Text = order.ShipperId.ToString(),
+                    Text = order.ShipperName.ToString(),
                     Value = order.ShipperId.ToString()
                 });
             }
-            ViewBag.EmpIds = EmpId;
+            ViewBag.Emp = Emp;
             ViewBag.ShipperIds = ShipperId;
             return View();
         }
@@ -93,20 +96,21 @@ namespace eSale.Controllers
 
             return View();
         }
-
-        [HttpGet()]
-        public ActionResult InsertOrder()
+        /// <summary>
+        /// 加入訂單
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult Create()
         {
             return View();
         }
-
         public ActionResult GetSysData()
         {
             return PartialView("_SysDatePartial");
         }
 
         [HttpPost()]
-        public ActionResult InsertOrder(Models.Order order)
+        public ActionResult InsertOrder(simpleSystem.Models.Order order)
         {
             if (ModelState.IsValid)
             {
