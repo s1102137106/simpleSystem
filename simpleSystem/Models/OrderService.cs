@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using simpleSystem.Models;
 
+
+using System.Data.Entity;
 namespace Models
 {
     public class OrderService
@@ -69,37 +71,40 @@ namespace Models
         {
             List<simpleSystem.ViewModels.Order> result = new List<simpleSystem.ViewModels.Order>();
 
+            DateTime reDate = Convert.ToDateTime(order.RequireDdate).Date;
+            DateTime orDate = Convert.ToDateTime(order.Orderdate).Date;
+            DateTime shDate = Convert.ToDateTime(order.ShippedDate).Date;
 
             using (SimpleDB db = new SimpleDB())
             {
+               
                 //依照給的order資訊下條件
                 var dbResult = db.Orders.Join(db.Customers,
                                     orders => orders.CustomerID,
                                     customers => customers.CustomerID,
                                     (orders, customers) => new { Customers = customers, Orders = orders })
                                     .Where(y => (
-                                        (order.OrderDd == y.Orders.OrderID || order.OrderDd == 0)
+                                        (order.OrderDd == y.Orders.OrderID  || order.OrderDd == 0)
                                         &&
                                         (order.EmpId == y.Orders.EmployeeID || order.EmpId == 0)
                                         &&
                                         (y.Customers.CompanyName.Contains(order.CustName) || order.CustName == null)
-                                        
                                         &&
                                         (order.ShipperId == y.Orders.ShipperID || order.ShipperId == 0)
+                                        &&//order.RequireDdate == y.Orders.RequiredDate
+                                        (DbFunctions.TruncateTime(y.Orders.RequiredDate) == reDate || order.RequireDdate == null)
+                                        &&// (order.Orderdate == y.Orders.OrderDate || order.Orderdate == null)
+                                        (DbFunctions.TruncateTime(y.Orders.OrderDate) == orDate || order.Orderdate == null)
                                         &&
-                                        (order.RequireDdate == y.Orders.RequiredDate || order.RequireDdate == null)
-                                        &&
-                                        (order.Orderdate == y.Orders.OrderDate || order.Orderdate == null)
-                                        &&
-                                        (order.ShippedDate == y.Orders.ShippedDate || order.ShippedDate == null)
+                                        (DbFunctions.TruncateTime(y.Orders.ShippedDate) == shDate || order.ShippedDate == null)
                                     ))
 
                                     .Select(x => new
                                     {
                                         OrderDd = x.Orders.OrderID,
                                         CustName = x.Customers.CompanyName,
-                                        Orderdate = x.Orders.OrderDate,
-                                        ShippedDate = x.Orders.ShippedDate
+                                        Orderdate = x.Orders.OrderDate ,
+                                        ShippedDate = x.Orders.ShippedDate 
                                     })
                                     .OrderBy(all => all.OrderDd)
                                     .ToList();
