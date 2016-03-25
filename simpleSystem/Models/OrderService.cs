@@ -112,7 +112,7 @@ namespace Models
 
                 foreach (var tmp in dbResult)
                 {
-                    result.Add(new simpleSystem.ViewModels.Order() { CustId = tmp.OrderDd, CustName = tmp.CustName, Orderdate = tmp.Orderdate, ShippedDate = tmp.ShippedDate });
+                    result.Add(new simpleSystem.ViewModels.Order() { CustId = tmp.OrderDd, CustName = tmp.CustName, OrderdateStr = tmp.Orderdate.ToString("yyyy/MM/dd"), ShippedDateStr = ((DateTime)tmp.Orderdate).ToString("yyyy/MM/dd") });
                 }
             }
             

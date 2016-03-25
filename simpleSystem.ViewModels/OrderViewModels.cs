@@ -47,6 +47,11 @@ namespace simpleSystem.ViewModels
         public DateTime? Orderdate { get; set; }
 
         /// <summary>
+        /// 訂單日期fromat
+        /// </summary>
+        public String OrderdateStr { get; set; }
+
+        /// <summary>
         /// 需要日期
         /// </summary>
         [DisplayName("需要日期")]
@@ -57,6 +62,11 @@ namespace simpleSystem.ViewModels
         /// </summary> 
         [DisplayName("出貨日期")]
         public DateTime? ShippedDate { get; set; }
+
+        /// <summary>
+        /// 出貨日期fromat
+        /// </summary>
+        public String ShippedDateStr { get; set; }
 
         /// <summary>
         /// 出貨公司代號

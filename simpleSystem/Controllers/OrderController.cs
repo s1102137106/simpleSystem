@@ -79,10 +79,11 @@ namespace eSale.Controllers
 
             var empList = orderService.GetEmp();
             var shipperList = orderService.GetShipper();
+         
 
             ViewBag.Data = orderList;
 
-
+            
             List<SelectListItem> ShipperId = new List<SelectListItem>();//出貨公司代號
             List<SelectListItem> Emp = new List<SelectListItem>();//value:empId text:  empName
 
