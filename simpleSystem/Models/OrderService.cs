@@ -68,45 +68,48 @@ namespace Models
         public List<simpleSystem.ViewModels.Order> GetOrderByCondtioin(simpleSystem.ViewModels.Order order)
         {
             List<simpleSystem.ViewModels.Order> result = new List<simpleSystem.ViewModels.Order>();
-            SimpleDB db = new SimpleDB();
-            //依照給的order資訊下條件
-            var dbResult = db.Orders.Join(db.Customers,
-                                orders => orders.CustomerID,
-                                customers => customers.CustomerID,
-                                (orders, customers) => new { Customers = customers, Orders = orders })
-                                .Where(y => (
-                                    (order.OrderDd == y.Orders.OrderID || order.OrderDd == 0)
-                                    &&
-                                    (order.EmpId == y.Orders.EmployeeID || order.EmpId == 0)
-                                    &&
-                                    (order.CustName == y.Customers.CompanyName || order.CustName == null)
-                                    &&
-                                    (order.ShipperId == y.Orders.ShipperID || order.ShipperId == 0)
-                                    &&
-                                    (order.RequireDdate == y.Orders.RequiredDate || order.RequireDdate == null)
-                                    &&
-                                    (order.Orderdate == y.Orders.OrderDate || order.Orderdate == null)
-                                    &&
-                                    (order.ShippedDate == y.Orders.ShippedDate || order.ShippedDate == null)
-                                ))
-                                 
-                                .Select(x => new
-                                {
-                                    OrderDd = x.Orders.OrderID,
-                                    CustName = x.Customers.CompanyName,
-                                    Orderdate = x.Orders.OrderDate,
-                                    ShippedDate = x.Orders.ShippedDate
-                                })
-                                .OrderBy(all => all.OrderDd)
-                                .ToList();
 
 
-            foreach (var tmp in dbResult)
+            using (SimpleDB db = new SimpleDB())
             {
-                result.Add(new simpleSystem.ViewModels.Order() { CustId = tmp.OrderDd, CustName = tmp.CustName, Orderdate = tmp.Orderdate,ShippedDate = tmp.ShippedDate});
+                //依照給的order資訊下條件
+                var dbResult = db.Orders.Join(db.Customers,
+                                    orders => orders.CustomerID,
+                                    customers => customers.CustomerID,
+                                    (orders, customers) => new { Customers = customers, Orders = orders })
+                                    .Where(y => (
+                                        (order.OrderDd == y.Orders.OrderID || order.OrderDd == 0)
+                                        &&
+                                        (order.EmpId == y.Orders.EmployeeID || order.EmpId == 0)
+                                        &&
+                                        (order.CustName == y.Customers.CompanyName || order.CustName == null)
+                                        &&
+                                        (order.ShipperId == y.Orders.ShipperID || order.ShipperId == 0)
+                                        &&
+                                        (order.RequireDdate == y.Orders.RequiredDate || order.RequireDdate == null)
+                                        &&
+                                        (order.Orderdate == y.Orders.OrderDate || order.Orderdate == null)
+                                        &&
+                                        (order.ShippedDate == y.Orders.ShippedDate || order.ShippedDate == null)
+                                    ))
+
+                                    .Select(x => new
+                                    {
+                                        OrderDd = x.Orders.OrderID,
+                                        CustName = x.Customers.CompanyName,
+                                        Orderdate = x.Orders.OrderDate,
+                                        ShippedDate = x.Orders.ShippedDate
+                                    })
+                                    .OrderBy(all => all.OrderDd)
+                                    .ToList();
+
+
+                foreach (var tmp in dbResult)
+                {
+                    result.Add(new simpleSystem.ViewModels.Order() { CustId = tmp.OrderDd, CustName = tmp.CustName, Orderdate = tmp.Orderdate, ShippedDate = tmp.ShippedDate });
+                }
             }
-
-
+            
             //result.Add(new simpleSystem.ViewModels.Order() { CustId = "001", CustName = "叡揚資訊", EmpId = 1, ShipperName = "哈哈公司", ShipperId = 12, EmpName = "王小明", Orderdate = DateTime.Parse("2015/11/08"), ShippedDate = DateTime.Parse("2015/11/09") });
             //result.Add(new simpleSystem.ViewModels.Order() { CustId = "002", CustName = "網軟資訊", EmpId = 2, ShipperName="嘻嘻公司",ShipperId=14, EmpName = "李小華", Orderdate = DateTime.Parse("2015/11/01"), ShippedDate = DateTime.Parse("2015/11/09") });
             return result;
