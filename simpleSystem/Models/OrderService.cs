@@ -7,6 +7,7 @@ using simpleSystem.Models;
 
 
 using System.Data.Entity;
+using System.Diagnostics;
 namespace Models
 {
     public class OrderService
@@ -112,7 +113,14 @@ namespace Models
 
                 foreach (var tmp in dbResult)
                 {
-                    result.Add(new simpleSystem.ViewModels.Order() { CustId = tmp.OrderDd, CustName = tmp.CustName, OrderdateStr = tmp.Orderdate.ToString("yyyy/MM/dd"), ShippedDateStr = ((DateTime)tmp.Orderdate).ToString("yyyy/MM/dd") });
+                    String shipperDateStr;
+                    if(tmp.ShippedDate == null){
+                        shipperDateStr = "";
+                        Debug.Print("yaya");
+                    }else{
+                        shipperDateStr = ((DateTime)tmp.Orderdate).ToString("yyyy/MM/dd");
+                    }
+                    result.Add(new simpleSystem.ViewModels.Order() { CustId = tmp.OrderDd, CustName = tmp.CustName, OrderdateStr = tmp.Orderdate.ToString("yyyy/MM/dd"), ShippedDateStr = shipperDateStr });
                 }
             }
             
