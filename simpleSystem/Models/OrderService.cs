@@ -82,7 +82,8 @@ namespace Models
                                         &&
                                         (order.EmpId == y.Orders.EmployeeID || order.EmpId == 0)
                                         &&
-                                        (order.CustName == y.Customers.CompanyName || order.CustName == null)
+                                        (y.Customers.CompanyName.Contains(order.CustName) || order.CustName == null)
+                                        
                                         &&
                                         (order.ShipperId == y.Orders.ShipperID || order.ShipperId == 0)
                                         &&
