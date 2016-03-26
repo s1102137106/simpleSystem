@@ -72,10 +72,10 @@ namespace Models
         {
             List<simpleSystem.ViewModels.Order> result = new List<simpleSystem.ViewModels.Order>();
 
-            DateTime reDate = Convert.ToDateTime(order.RequireDdate).Date;
-            DateTime orDate = Convert.ToDateTime(order.Orderdate).Date;
-            DateTime shDate = Convert.ToDateTime(order.ShippedDate).Date;
-
+            DateTime reDate = (Convert.ToDateTime(order.RequireDdate)).Date;
+            DateTime orDate = (Convert.ToDateTime(order.Orderdate)).Date;
+            DateTime shDate = (Convert.ToDateTime(order.ShippedDate)).Date;
+            
             using (SimpleDB db = new SimpleDB())
             {
                
@@ -105,7 +105,8 @@ namespace Models
                                         OrderDd = x.Orders.OrderID,
                                         CustName = x.Customers.CompanyName,
                                         Orderdate = x.Orders.OrderDate ,
-                                        ShippedDate = x.Orders.ShippedDate 
+                                        ShippedDate = x.Orders.ShippedDate,
+                                        
                                     })
                                     .OrderBy(all => all.OrderDd)
                                     .ToList();
@@ -113,12 +114,12 @@ namespace Models
 
                 foreach (var tmp in dbResult)
                 {
+                   
                     String shipperDateStr;
                     if(tmp.ShippedDate == null){
                         shipperDateStr = "";
-                        Debug.Print("yaya");
                     }else{
-                        shipperDateStr = ((DateTime)tmp.Orderdate).ToString("yyyy/MM/dd");
+                        shipperDateStr = ((DateTime)tmp.ShippedDate).ToString("yyyy/MM/dd");
                     }
                     result.Add(new simpleSystem.ViewModels.Order() { CustId = tmp.OrderDd, CustName = tmp.CustName, OrderdateStr = tmp.Orderdate.ToString("yyyy/MM/dd"), ShippedDateStr = shipperDateStr });
                 }
