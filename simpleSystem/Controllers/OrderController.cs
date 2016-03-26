@@ -17,14 +17,14 @@ namespace eSale.Controllers
         /// <returns></returns>
 
         [HttpGet()]
-        public ActionResult Index(int page = 1)
+        public ActionResult Index()
         {
             Models.OrderService orderService = new Models.OrderService();
          
             simpleSystem.ViewModels.Order nullCondition = new simpleSystem.ViewModels.Order();
             //查詢條件設定成空的
-            IPagedList<simpleSystem.ViewModels.Order> orderList = orderService.GetOrderByCondtioin(nullCondition, page);
-
+            IPagedList<simpleSystem.ViewModels.Order> orderList = orderService.GetOrderByCondtion(nullCondition);
+            ViewBag.condition = nullCondition;//空白的查詢條件
             var empList = orderService.GetEmp();
             var shipperList = orderService.GetShipper();
 
@@ -72,13 +72,13 @@ namespace eSale.Controllers
         [HttpPost()]
         public ActionResult Index(simpleSystem.ViewModels.Order condition)
         {
+            ViewBag.condition = condition;//將查詢結果傳回給前端
+
             Models.OrderService orderService = new Models.OrderService();
-            
             simpleSystem.ViewModels.Order nullCondition = new simpleSystem.ViewModels.Order();
             //查詢條件設定成空的
-            IPagedList<simpleSystem.ViewModels.Order> orderList = orderService.GetOrderByCondtioin(condition);
+            IPagedList<simpleSystem.ViewModels.Order> orderList = orderService.GetOrderByCondtion(condition, condition.Page);
           
-
             var empList = orderService.GetEmp();
             var shipperList = orderService.GetShipper();
             ViewBag.Data = orderList;
@@ -109,6 +109,32 @@ namespace eSale.Controllers
                     Value = shipper.ShipperID.ToString()
                 });
             }
+
+
+            
+            if(condition.OrderDate!=null){
+                ViewBag.OrderDate = ((DateTime)condition.OrderDate).ToString("yyyy-MM-dd");
+            }else{
+                ViewBag.OrderDate = null;
+            }
+
+            if (condition.RequireDdate!=null)
+            {
+                ViewBag.RequireDdate = ((DateTime)condition.RequireDdate).ToString("yyyy-MM-dd");
+            }
+            else
+            {
+                ViewBag.RequireDdate = null;
+            }
+
+            if (condition.ShippedDate != null)
+            {
+                ViewBag.ShippedDate = ((DateTime)condition.ShippedDate).ToString("yyyy-MM-dd");
+            }else{
+                ViewBag.ShippedDate = null;
+            }
+            
+            
 
             ViewBag.Emps = Emp;
             ViewBag.ShipperIds = ShipperId;

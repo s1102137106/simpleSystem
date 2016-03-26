@@ -116,5 +116,10 @@ namespace simpleSystem.ViewModels
         /// 出貨國家
         /// </summary>
         public string ShipCountry { get; set; }
+
+        /// <summary>
+        /// 第幾頁資料
+        /// </summary>
+        public int Page { get; set; }
     }
 }

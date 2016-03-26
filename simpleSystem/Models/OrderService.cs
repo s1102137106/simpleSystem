@@ -70,7 +70,7 @@ namespace Models
         /// 依照條件取得訂單資料
         /// </summary>
         /// <returns></returns>
-        public IPagedList<simpleSystem.ViewModels.Order> GetOrderByCondtioin(simpleSystem.ViewModels.Order order, int page = 1)
+        public IPagedList<simpleSystem.ViewModels.Order> GetOrderByCondtion(simpleSystem.ViewModels.Order order, int page = 1)
         {
             //IPagedList<simpleSystem.ViewModels.Order> result = new IPagedList<simpleSystem.ViewModels.Order>();
 
