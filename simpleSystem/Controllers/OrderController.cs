@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PagedList;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,13 +17,13 @@ namespace eSale.Controllers
         /// <returns></returns>
 
         [HttpGet()]
-        public ActionResult Index()
+        public ActionResult Index(int page = 1)
         {
             Models.OrderService orderService = new Models.OrderService();
-            List<simpleSystem.ViewModels.Order> orderList = new List<simpleSystem.ViewModels.Order>();
+         
             simpleSystem.ViewModels.Order nullCondition = new simpleSystem.ViewModels.Order();
             //查詢條件設定成空的
-            orderList = orderService.GetOrderByCondtioin(nullCondition);
+            IPagedList<simpleSystem.ViewModels.Order> orderList = orderService.GetOrderByCondtioin(nullCondition, page);
 
             var empList = orderService.GetEmp();
             var shipperList = orderService.GetShipper();
@@ -60,7 +61,7 @@ namespace eSale.Controllers
             
             ViewBag.Emps = Emp;
             ViewBag.ShipperIds = ShipperId;
-            return View();
+            return View(orderList);
         }
 
         /// <summary>
@@ -72,18 +73,15 @@ namespace eSale.Controllers
         public ActionResult Index(simpleSystem.ViewModels.Order condition)
         {
             Models.OrderService orderService = new Models.OrderService();
-            List<simpleSystem.ViewModels.Order> orderList = new List<simpleSystem.ViewModels.Order>();
+            
             simpleSystem.ViewModels.Order nullCondition = new simpleSystem.ViewModels.Order();
             //查詢條件設定成空的
-            orderList = orderService.GetOrderByCondtioin(condition);
+            IPagedList<simpleSystem.ViewModels.Order> orderList = orderService.GetOrderByCondtioin(condition);
+          
 
             var empList = orderService.GetEmp();
             var shipperList = orderService.GetShipper();
-         
-
             ViewBag.Data = orderList;
-
-            
             List<SelectListItem> ShipperId = new List<SelectListItem>();//出貨公司代號
             List<SelectListItem> Emp = new List<SelectListItem>();//value:empId text:  empName
 
@@ -114,7 +112,7 @@ namespace eSale.Controllers
 
             ViewBag.Emps = Emp;
             ViewBag.ShipperIds = ShipperId;
-            return View();
+            return View(orderList);
         }
 
         /// <summary>

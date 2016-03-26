@@ -44,7 +44,7 @@ namespace simpleSystem.ViewModels
         /// 訂單日期
         /// </summary>
         [DisplayName("訂單日期")]
-        public DateTime? Orderdate { get; set; }
+        public DateTime? OrderDate { get; set; }
 
         /// <summary>
         /// 訂單日期fromat

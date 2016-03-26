@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using simpleSystem.Models;
-
+using PagedList;
 
 using System.Data.Entity;
 using System.Diagnostics;
@@ -61,57 +61,61 @@ namespace Models
             return result;
          }
 
-         
-
+        /// <summary>
+        /// 一頁需要幾筆資料
+        /// </summary>
+        private int pageSize = 5;
 
         /// <summary>
         /// 依照條件取得訂單資料
         /// </summary>
         /// <returns></returns>
-        public List<simpleSystem.ViewModels.Order> GetOrderByCondtioin(simpleSystem.ViewModels.Order order)
+        public IPagedList<simpleSystem.ViewModels.Order> GetOrderByCondtioin(simpleSystem.ViewModels.Order order, int page = 1)
         {
-            List<simpleSystem.ViewModels.Order> result = new List<simpleSystem.ViewModels.Order>();
+            //IPagedList<simpleSystem.ViewModels.Order> result = new IPagedList<simpleSystem.ViewModels.Order>();
 
             DateTime reDate = (Convert.ToDateTime(order.RequireDdate)).Date;
-            DateTime orDate = (Convert.ToDateTime(order.Orderdate)).Date;
+            DateTime orDate = (Convert.ToDateTime(order.OrderDate)).Date;
             DateTime shDate = (Convert.ToDateTime(order.ShippedDate)).Date;
             
             using (SimpleDB db = new SimpleDB())
             {
-               
+                int currentPage = page < 1 ? 1 : page;
                 //依照給的order資訊下條件
-                var dbResult = db.Orders.Join(db.Customers,
-                                    orders => orders.CustomerID,
-                                    customers => customers.CustomerID,
-                                    (orders, customers) => new { Customers = customers, Orders = orders })
-                                    .Where(y => (
-                                        (order.OrderDd == y.Orders.OrderID  || order.OrderDd == 0)
-                                        &&
-                                        (order.EmpId == y.Orders.EmployeeID || order.EmpId == 0)
-                                        &&
-                                        (y.Customers.CompanyName.Contains(order.CustName) || order.CustName == null)
-                                        &&
-                                        (order.ShipperId == y.Orders.ShipperID || order.ShipperId == 0)
-                                        &&//order.RequireDdate == y.Orders.RequiredDate
-                                        (DbFunctions.TruncateTime(y.Orders.RequiredDate) == reDate || order.RequireDdate == null)
-                                        &&// (order.Orderdate == y.Orders.OrderDate || order.Orderdate == null)
-                                        (DbFunctions.TruncateTime(y.Orders.OrderDate) == orDate || order.Orderdate == null)
-                                        &&
-                                        (DbFunctions.TruncateTime(y.Orders.ShippedDate) == shDate || order.ShippedDate == null)
-                                    ))
+              var dbResult = db.Orders.Join(db.Customers,
+                                   orders => orders.CustomerID,
+                                   customers => customers.CustomerID,
+                                   (orders, customers) => new { Customers = customers, Orders = orders })
+                                   .Where(y => (
+                                       (order.OrderDd == y.Orders.OrderID || order.OrderDd == 0)
+                                       &&
+                                       (order.EmpId == y.Orders.EmployeeID || order.EmpId == 0)
+                                       &&
+                                       (y.Customers.CompanyName.Contains(order.CustName) || order.CustName == null)
+                                       &&
+                                       (order.ShipperId == y.Orders.ShipperID || order.ShipperId == 0)
+                                       &&//order.RequireDdate == y.Orders.RequiredDate
+                                       (DbFunctions.TruncateTime(y.Orders.RequiredDate) == reDate || order.RequireDdate == null)
+                                       &&// (order.Orderdate == y.Orders.OrderDate || order.Orderdate == null)
+                                       (DbFunctions.TruncateTime(y.Orders.OrderDate) == orDate || order.OrderDate == null)
+                                       &&
+                                       (DbFunctions.TruncateTime(y.Orders.ShippedDate) == shDate || order.ShippedDate == null)
+                                   ))
 
-                                    .Select(x => new
-                                    {
-                                        OrderDd = x.Orders.OrderID,
-                                        CustName = x.Customers.CompanyName,
-                                        Orderdate = x.Orders.OrderDate ,
-                                        ShippedDate = x.Orders.ShippedDate,
-                                        
-                                    })
-                                    .OrderBy(all => all.OrderDd)
-                                    .ToList();
+                                   .Select(x => new simpleSystem.ViewModels.Order
+                                   {
+                                       OrderDd = x.Orders.OrderID,
+                                       CustName = x.Customers.CompanyName,
+                                       OrderDate = x.Orders.OrderDate,
+                                       ShippedDate = x.Orders.ShippedDate,
 
+                                   })
+                                   .OrderBy(all => all.OrderDd)
+                                   .ToPagedList(currentPage, pageSize);
 
+                
+                /*
+                 
                 foreach (var tmp in dbResult)
                 {
                    
@@ -121,13 +125,29 @@ namespace Models
                     }else{
                         shipperDateStr = ((DateTime)tmp.ShippedDate).ToString("yyyy/MM/dd");
                     }
-                    result.Add(new simpleSystem.ViewModels.Order() { CustId = tmp.OrderDd, CustName = tmp.CustName, OrderdateStr = tmp.Orderdate.ToString("yyyy/MM/dd"), ShippedDateStr = shipperDateStr });
+                    result.(new simpleSystem.ViewModels.Order() { CustId = tmp.OrderDd, CustName = tmp.CustName, OrderdateStr = tmp.Orderdate.ToString("yyyy/MM/dd"), ShippedDateStr = shipperDateStr });
                 }
+                 */
+
+                var index = 0;
+                foreach (var tmp in dbResult)
+                {
+                    if(tmp.ShippedDate == null){
+                        dbResult[index].ShippedDateStr = "";
+                    }else{
+                        dbResult[index].ShippedDateStr = ((DateTime)tmp.ShippedDate).ToString("yyyy/MM/dd");
+                    }
+
+                    dbResult[index].OrderdateStr = ((DateTime)tmp.OrderDate).ToString("yyyy/MM/dd");
+
+                    index++;
+                }
+
+
+                //result.Add(new simpleSystem.ViewModels.Order() { CustId = "001", CustName = "叡揚資訊", EmpId = 1, ShipperName = "哈哈公司", ShipperId = 12, EmpName = "王小明", Orderdate = DateTime.Parse("2015/11/08"), ShippedDate = DateTime.Parse("2015/11/09") });
+                //result.Add(new simpleSystem.ViewModels.Order() { CustId = "002", CustName = "網軟資訊", EmpId = 2, ShipperName="嘻嘻公司",ShipperId=14, EmpName = "李小華", Orderdate = DateTime.Parse("2015/11/01"), ShippedDate = DateTime.Parse("2015/11/09") });
+                return dbResult;
             }
-            
-            //result.Add(new simpleSystem.ViewModels.Order() { CustId = "001", CustName = "叡揚資訊", EmpId = 1, ShipperName = "哈哈公司", ShipperId = 12, EmpName = "王小明", Orderdate = DateTime.Parse("2015/11/08"), ShippedDate = DateTime.Parse("2015/11/09") });
-            //result.Add(new simpleSystem.ViewModels.Order() { CustId = "002", CustName = "網軟資訊", EmpId = 2, ShipperName="嘻嘻公司",ShipperId=14, EmpName = "李小華", Orderdate = DateTime.Parse("2015/11/01"), ShippedDate = DateTime.Parse("2015/11/09") });
-            return result;
         }
         /// <summary>
         /// 刪除訂單
