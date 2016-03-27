@@ -20,23 +20,15 @@ namespace eSale.Controllers
         public ActionResult Index()
         {
             Models.OrderService orderService = new Models.OrderService();
-         
-            simpleSystem.ViewModels.Order nullCondition = new simpleSystem.ViewModels.Order();
-            //查詢條件設定成空的
+            simpleSystem.ViewModels.Order nullCondition = new simpleSystem.ViewModels.Order();//查詢條件設定成空的
             IPagedList<simpleSystem.ViewModels.Order> orderList = orderService.GetOrderByCondtion(nullCondition);
             ViewBag.condition = nullCondition;//空白的查詢條件
-            var empList = orderService.GetEmp();
-            var shipperList = orderService.GetShipper();
+            ViewBag.Data = orderList;//傳回搜尋結果
 
-            ViewBag.Data = orderList;
-
-
-            List<SelectListItem> ShipperId = new List<SelectListItem>();//出貨公司代號
+            #region 員工選單
             List<SelectListItem> Emp = new List<SelectListItem>();//value:empId text:  empName
-
-           
+            var empList = orderService.GetEmp();
             System.Text.StringBuilder fullName = new StringBuilder();
-            
             foreach (var emp in empList)
             {
                 fullName.Append(emp.FirstName);
@@ -49,7 +41,12 @@ namespace eSale.Controllers
                 });
                 fullName.Clear();
             }
+            ViewBag.Emps = Emp;
+            #endregion
 
+            #region 出貨公司選單
+            var shipperList = orderService.GetShipper();
+            List<SelectListItem> ShipperId = new List<SelectListItem>();//出貨公司代號
             foreach (var shipper in shipperList)
             {
                 ShipperId.Add(new SelectListItem
@@ -58,9 +55,9 @@ namespace eSale.Controllers
                     Value = shipper.ShipperID.ToString()
                 });
             }
-            
-            ViewBag.Emps = Emp;
             ViewBag.ShipperIds = ShipperId;
+            #endregion
+
             return View(orderList);
         }
 
@@ -73,21 +70,14 @@ namespace eSale.Controllers
         public ActionResult Index(simpleSystem.ViewModels.Order condition)
         {
             ViewBag.condition = condition;//將查詢結果傳回給前端
-
             Models.OrderService orderService = new Models.OrderService();
-            simpleSystem.ViewModels.Order nullCondition = new simpleSystem.ViewModels.Order();
-            //查詢條件設定成空的
             IPagedList<simpleSystem.ViewModels.Order> orderList = orderService.GetOrderByCondtion(condition, condition.Page);
-          
-            var empList = orderService.GetEmp();
-            var shipperList = orderService.GetShipper();
             ViewBag.Data = orderList;
-            List<SelectListItem> ShipperId = new List<SelectListItem>();//出貨公司代號
+          
+            #region 員工選單
             List<SelectListItem> Emp = new List<SelectListItem>();//value:empId text:  empName
-
-
             System.Text.StringBuilder fullName = new StringBuilder();
-
+            var empList = orderService.GetEmp();
             foreach (var emp in empList)
             {
                 fullName.Append(emp.FirstName);
@@ -100,7 +90,12 @@ namespace eSale.Controllers
                 });
                 fullName.Clear();
             }
+            ViewBag.Emps = Emp;
+            #endregion
 
+            #region 出貨公司
+            var shipperList = orderService.GetShipper();
+            List<SelectListItem> ShipperId = new List<SelectListItem>();//出貨公司代號
             foreach (var shipper in shipperList)
             {
                 ShipperId.Add(new SelectListItem
@@ -109,10 +104,11 @@ namespace eSale.Controllers
                     Value = shipper.ShipperID.ToString()
                 });
             }
+            ViewBag.ShipperIds = ShipperId;
+            #endregion
 
-
-            
-            if(condition.OrderDate!=null){
+            #region 搜尋條件相關日期
+            if (condition.OrderDate!=null){
                 ViewBag.OrderDate = ((DateTime)condition.OrderDate).ToString("yyyy-MM-dd");
             }else{
                 ViewBag.OrderDate = null;
@@ -134,10 +130,8 @@ namespace eSale.Controllers
                 ViewBag.ShippedDate = null;
             }
             
-            
+           #endregion
 
-            ViewBag.Emps = Emp;
-            ViewBag.ShipperIds = ShipperId;
             return View(orderList);
         }
 
