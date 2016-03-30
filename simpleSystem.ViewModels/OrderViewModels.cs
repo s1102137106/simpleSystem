@@ -121,5 +121,18 @@ namespace simpleSystem.ViewModels
         /// 第幾頁資料
         /// </summary>
         public int Page { get; set; }
+
+
+        /// <summary>
+        /// 排序
+        /// </summary>
+        public OrderBy OrderBy { get; set; }
+
+        /// <summary>
+        /// 資料排序的方式(一種)
+        /// </summary>
+        public string OrderByid { get; set; }
+
+
     }
 }
