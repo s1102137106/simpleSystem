@@ -120,19 +120,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Category.cs" />
-    <Compile Include="Models\Customer.cs" />
-    <Compile Include="Models\Employee.cs" />
-    <Compile Include="Models\Num.cs" />
-    <Compile Include="Models\Order.cs" />
-    <Compile Include="Models\OrderDetail.cs" />
-    <Compile Include="Models\OrderService.cs" />
-    <Compile Include="Models\Product.cs" />
-    <Compile Include="Models\Score.cs" />
-    <Compile Include="Models\Shipper.cs" />
-    <Compile Include="Models\SimpleDB.cs" />
-    <Compile Include="Models\Supplier.cs" />
-    <Compile Include="Models\Test.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -147,6 +134,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Order\Create.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -156,8 +144,17 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Models\simpleSystem.Models.csproj">
+      <Project>{1b34171b-e27a-413f-9222-239e5bd7a38c}</Project>
+      <Name>simpleSystem.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\simpleSystem.Service\simpleSystem.Service.csproj">
+      <Project>{ff765efb-997c-4b76-9af1-4be06dfff3b2}</Project>
+      <Name>simpleSystem.Service</Name>
+    </ProjectReference>
     <ProjectReference Include="..\simpleSystem.ViewModels\simpleSystem.ViewModels.csproj">
       <Project>{084cfeb7-96c7-42a2-be70-a1957716a672}</Project>
       <Name>simpleSystem.ViewModels</Name>

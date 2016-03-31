@@ -1,14 +1,14 @@
-namespace simpleSystem.Models
+namespace Models
 {
     using System;
     using System.Data.Entity;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
 
-    public partial class SimpleDB : DbContext
+    public partial class originalDB : DbContext
     {
-        public SimpleDB()
-            : base("name=SimpleDB")
+        public originalDB()
+            : base("name=originalDB")
         {
         }
 

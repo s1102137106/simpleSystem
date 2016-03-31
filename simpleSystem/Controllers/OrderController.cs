@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
-
+using SimpleSystem.Service;
 namespace eSale.Controllers
 {
     public class OrderController : Controller
@@ -19,7 +19,7 @@ namespace eSale.Controllers
         [HttpGet()]
         public ActionResult Index()
         {
-            Models.OrderService orderService = new Models.OrderService();
+            OrderService orderService = new OrderService();
             simpleSystem.ViewModels.Order nullCondition = new simpleSystem.ViewModels.Order();//查詢條件設定成空的
             nullCondition.OrderBy = new simpleSystem.ViewModels.OrderBy { OrderByid = OrderByID[0], OrderByStrings = OrderByStrings[0] };
             nullCondition.OrderByid = OrderByID[0];
@@ -28,8 +28,6 @@ namespace eSale.Controllers
 
             ViewBag.condition = nullCondition;//空白的查詢條件
             ViewBag.Data = orderList;//傳回搜尋結果
-
-
 
             #region 員工選單
             List<SelectListItem> Emp = new List<SelectListItem>();//value:empId text:  empName
@@ -104,7 +102,7 @@ namespace eSale.Controllers
         public ActionResult Index(simpleSystem.ViewModels.Order condition)
         {
             ViewBag.condition = condition;//將查詢結果傳回給前端
-            Models.OrderService orderService = new Models.OrderService();
+            OrderService orderService = new OrderService();
             IPagedList<simpleSystem.ViewModels.Order> orderList = orderService.GetOrderByCondtion(condition, condition.Page);
            
             ViewBag.Data = orderList;
@@ -258,7 +256,7 @@ namespace eSale.Controllers
         }
 
         [HttpPost()]
-        public ActionResult InsertOrder(simpleSystem.Models.Order order)
+        public ActionResult InsertOrder(simpleSystem.ViewModels.Order order)
         {
             if (ModelState.IsValid)
             {
@@ -273,7 +271,7 @@ namespace eSale.Controllers
 
         public JsonResult TestJsonResult()
         {
-            Models.OrderService service = new Models.OrderService();
+            OrderService service = new OrderService();
             return this.Json(service.GetOrderById("123"), JsonRequestBehavior.AllowGet);
         }
 

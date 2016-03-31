@@ -1,4 +1,4 @@
-namespace simpleSystem.Models
+namespace Models
 {
     using System;
     using System.Collections.Generic;

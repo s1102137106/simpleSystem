@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using simpleSystem.Models;
+
 using PagedList;
 
 using System.Data.Entity;
 using System.Diagnostics;
-namespace Models
+namespace SimpleSystem.Service
 {
     public class OrderService
     {
@@ -16,7 +16,7 @@ namespace Models
         /// 新增訂單
         /// </summary>
         /// <param name="order"></param>
-        public void InsertOrder(simpleSystem.Models.Order order)
+        public void InsertOrder(Models.Order order)
         {
             //todo
         }
@@ -24,24 +24,24 @@ namespace Models
         /// 依照Id 取得訂單資料
         /// </summary>
         /// <returns></returns>
-        public simpleSystem.Models.Order GetOrderById(string orderId)
+        public Models.Order GetOrderById(string orderId)
         {
             //todo
-            return new Order();
+            return new Models.Order();
         }
         /// <summary>
         /// Order/index主畫面的 Shipper預設下拉式選單
         /// </summary>
         /// <returns></returns>
-        public List<Shipper> GetShipper()
+        public List<Models.Shipper> GetShipper()
         {
-            List<Shipper> result = new List<Shipper>();
-            SimpleDB db = new SimpleDB();
+            List<Models.Shipper> result = new List<Models.Shipper>();
+            Models.originalDB db = new Models.originalDB();
 
             var tmpShipper = db.Shippers.Select(x => new { CompanyName = x.CompanyName, ShipperID = x.ShipperID }).ToList();
             foreach (var Shipper in tmpShipper)
             {
-                result.Add(new Shipper { CompanyName = Shipper.CompanyName, ShipperID = Shipper.ShipperID });
+                result.Add(new Models.Shipper { CompanyName = Shipper.CompanyName, ShipperID = Shipper.ShipperID });
             } return result;
         }
 
@@ -49,15 +49,15 @@ namespace Models
         ///  Order/index主畫面的 Emp預設下拉式選單
         /// </summary>
         /// <returns></returns>
-        public List<Employee> GetEmp()
+        public List<Models.Employee> GetEmp()
         {
-            List<Employee> result = new List<Employee>();
-            SimpleDB db = new SimpleDB();
+            List<Models.Employee> result = new List<Models.Employee>();
+            Models.originalDB db = new Models.originalDB();
             var tmpEmp = db.Employees.Select(x => new { EmployeeID = x.EmployeeID, FirstName = x.FirstName, LastName = x.LastName }).ToList();
 
             foreach (var emp in tmpEmp)
             {
-                result.Add(new Employee { EmployeeID = emp.EmployeeID, FirstName = emp.FirstName, LastName = emp.LastName });
+                result.Add(new Models.Employee { EmployeeID = emp.EmployeeID, FirstName = emp.FirstName, LastName = emp.LastName });
             }
             return result;
         }
@@ -78,11 +78,11 @@ namespace Models
             DateTime reDate = (Convert.ToDateTime(order.RequireDdate)).Date;
             DateTime orDate = (Convert.ToDateTime(order.OrderDate)).Date;
             DateTime shDate = (Convert.ToDateTime(order.ShippedDate)).Date;
-            
-           
 
 
-            using (SimpleDB db = new SimpleDB())
+
+
+            using (Models.originalDB db = new Models.originalDB())
             {
                 int currentPage = page < 1 ? 1 : page;
                 //依照給的order資訊下條件
@@ -169,6 +169,8 @@ namespace Models
                 return orderDbResult;
             }
         }
+
+               
         /// <summary>
         /// 刪除訂單
         /// </summary>
@@ -179,7 +181,7 @@ namespace Models
         /// <summary>
         /// 更新訂單
         /// </summary>
-        public void UpdateOrder(simpleSystem.Models.Order order)
+        public void UpdateOrder(Models.Order order)
         {
             //todo
         }

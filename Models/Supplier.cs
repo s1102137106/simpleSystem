@@ -1,4 +1,4 @@
-namespace simpleSystem.Models
+namespace Models
 {
     using System;
     using System.Collections.Generic;
@@ -6,15 +6,15 @@ namespace simpleSystem.Models
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.Spatial;
 
-    [Table("Sales.Customers")]
-    public partial class Customer
+    [Table("Production.Suppliers")]
+    public partial class Supplier
     {
-        public Customer()
+        public Supplier()
         {
-            Orders = new HashSet<Order>();
+            Products = new HashSet<Product>();
         }
 
-        public int CustomerID { get; set; }
+        public int SupplierID { get; set; }
 
         [Required]
         [StringLength(40)]
@@ -53,6 +53,6 @@ namespace simpleSystem.Models
         [StringLength(24)]
         public string Fax { get; set; }
 
-        public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<Product> Products { get; set; }
     }
 }
