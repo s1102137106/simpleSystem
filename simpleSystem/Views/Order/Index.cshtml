@@ -34,7 +34,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label>@Html.LabelFor(model => model.FirstOrDefault().OrderDd)</label>
-                    <input type="text" class="form-control" id="OrderDd" name="OrderDd" placeholder="請輸入要查詢的訂單編號" value="@ViewBag.condition.OrderDd">
+                    <input form-control text-box single-line input-validation-error data-val-number="請輸入數字" data-val-required="必填" type="number" class="form-control" id="OrderDd" name="OrderDd" placeholder="請輸入要查詢的訂單編號" value="@ViewBag.condition.OrderDd">
                 </div>
             </div>
             <div class="col-md-4 col-md-offset-*">
@@ -176,7 +176,7 @@
                 <td>@orders.ShippedDateStr</td>
                 <td>
                     <div class="row">
-                        <button class="btn btn-warning">修改</button>
+                        <button  value="@orders.OrderDd" class="btn btn-warning editButton">修改</button>
                         <button class="btn btn-danger">刪除</button>
                     </div>
                 </td>
@@ -211,6 +211,11 @@
         function toCreateView() {
             document.location.href = "Order/Create";
         }
+
+        //去修改訂單的頁面
+        $(".editButton").click(function (e) {
+            document.location.href = "Order/Edit/" + e.target.value;
+        });
 
     </script>
 

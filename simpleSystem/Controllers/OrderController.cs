@@ -200,6 +200,15 @@ namespace eSale.Controllers
             return View(orderList);
         }
 
+        /// <summary>
+        /// 修改訂單
+        /// </summary>
+        [HttpGet()]
+        public ActionResult Edit(int id)
+        {
+            return View();
+        }
+
 
         public List<simpleSystem.ViewModels.OrderBy> OrderByList { get; set; }
 
