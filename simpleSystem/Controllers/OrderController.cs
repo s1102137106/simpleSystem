@@ -29,38 +29,11 @@ namespace eSale.Controllers
             ViewBag.condition = nullCondition;//空白的查詢條件
             ViewBag.Data = orderList;//傳回搜尋結果
 
-            #region 員工選單
-            List<SelectListItem> Emp = new List<SelectListItem>();//value:empId text:  empName
-            var empList = orderService.GetEmp();
-            System.Text.StringBuilder fullName = new StringBuilder();
-            foreach (var emp in empList)
-            {
-                fullName.Append(emp.FirstName);
-                fullName.Append(" ");
-                fullName.Append(emp.LastName);
-                Emp.Add(new SelectListItem
-                {
-                    Text = fullName.ToString(),
-                    Value = emp.EmployeeID.ToString()
-                });
-                fullName.Clear();
-            }
-            ViewBag.Emps = Emp;
-            #endregion
+            //員工選單
+            ViewBag.Emps = GetEmpSelect(orderService);
 
-            #region 出貨公司選單
-            var shipperList = orderService.GetShipper();
-            List<SelectListItem> ShipperId = new List<SelectListItem>();//出貨公司代號
-            foreach (var shipper in shipperList)
-            {
-                ShipperId.Add(new SelectListItem
-                {
-                    Text = shipper.CompanyName.ToString(),
-                    Value = shipper.ShipperID.ToString()
-                });
-            }
-            ViewBag.ShipperIds = ShipperId;
-            #endregion
+            //出貨公司選單
+            ViewBag.ShipperIds = GetShipperSelect(orderService);
 
             #region 排序條件字串
 
@@ -106,40 +79,12 @@ namespace eSale.Controllers
             IPagedList<simpleSystem.ViewModels.Order> orderList = orderService.GetOrderByCondtion(condition, condition.Page);
            
             ViewBag.Data = orderList;
-            
 
-            #region 員工選單
-            List<SelectListItem> Emp = new List<SelectListItem>();//value:empId text:  empName
-            System.Text.StringBuilder fullName = new StringBuilder();
-            var empList = orderService.GetEmp();
-            foreach (var emp in empList)
-            {
-                fullName.Append(emp.FirstName);
-                fullName.Append(" ");
-                fullName.Append(emp.LastName);
-                Emp.Add(new SelectListItem
-                {
-                    Text = fullName.ToString(),
-                    Value = emp.EmployeeID.ToString()
-                });
-                fullName.Clear();
-            }
-            ViewBag.Emps = Emp;
-            #endregion
+            //員工選單
+            ViewBag.Emps = GetEmpSelect(orderService);
 
-            #region 出貨公司
-            var shipperList = orderService.GetShipper();
-            List<SelectListItem> ShipperId = new List<SelectListItem>();//出貨公司代號
-            foreach (var shipper in shipperList)
-            {
-                ShipperId.Add(new SelectListItem
-                {
-                    Text = shipper.CompanyName.ToString(),
-                    Value = shipper.ShipperID.ToString()
-                });
-            }
-            ViewBag.ShipperIds = ShipperId;
-            #endregion
+            //出貨公司選單
+            ViewBag.ShipperIds = GetShipperSelect(orderService);
 
             #region 搜尋條件相關日期
             if (condition.OrderDate != null)
@@ -206,9 +151,51 @@ namespace eSale.Controllers
         [HttpGet()]
         public ActionResult Edit(int id)
         {
-            return View();
+            OrderService orderService = new OrderService();
+            ViewBag.Emps = GetEmpSelect(orderService);
+            ViewBag.ShipperIds = GetShipperSelect(orderService);
+            List<simpleSystem.ViewModels.OrderEditViewModels> models = orderService.GetOrderById(id);
+            simpleSystem.ViewModels.OrderEditViewModels model = new simpleSystem.ViewModels.OrderEditViewModels()
+            {
+                CustID = models[0].CustID,
+                CustName = models[0].CustName,
+                EmpId = models[0].EmpId,
+                EmpName = models[0].EmployeeFirstName + models[0].EmployeeLastName,
+                Freight = models[0].Freight,
+                OrderDate = models[0].OrderDate,
+                OrderID = models[0].OrderID,
+                RequiredDate =models[0].RequiredDate,
+                ShipAddress =models[0].ShipAddress,
+                ShipCity =models[0].ShipCity,
+                ShipCountry =models[0].ShipCountry,
+                ShipName = models[0].ShipName,
+                ShippedDate = models[0].ShippedDate,
+                ShipperId = models[0].ShipperId,
+                ShipperName = models[0].ShipperName,
+                ShipPostalCode =models[0].ShipPostalCode,
+                ShipRegion = models[0].ShipRegion
+                
+            };
+            #region 處理orderDetails
+                
+                //ProductID 
+                //ProductName
+                //UnitPrice
+                //Qty
+            #endregion
+
+            return View(models);
         }
 
+        /// <summary>
+        /// 修改訂單(得到需要更新的資料)
+        /// </summary>
+        [HttpPost()]
+        public ContentResult Edit(simpleSystem.ViewModels.OrderEditViewModels order){
+            ContentResult result =  new  ContentResult();
+            result.Content = "更新成功";
+            return result;
+        }
 
         public List<simpleSystem.ViewModels.OrderBy> OrderByList { get; set; }
 
@@ -251,6 +238,7 @@ namespace eSale.Controllers
         {
             return View();
         }
+
         /// <summary>
         /// 加入訂單
         /// </summary>
@@ -259,6 +247,7 @@ namespace eSale.Controllers
         {
             return View();
         }
+
         public ActionResult GetSysData()
         {
             return PartialView("_SysDatePartial");
@@ -278,14 +267,49 @@ namespace eSale.Controllers
             //return View();
         }
 
-        public JsonResult TestJsonResult()
-        {
-            OrderService service = new OrderService();
-            return this.Json(service.GetOrderById("123"), JsonRequestBehavior.AllowGet);
-        }
 
-       
-                                    
+        /// <summary>
+        /// 得到員工下拉式選單
+        /// </summary>
+        /// <returns></returns>
+        private List<SelectListItem> GetEmpSelect(OrderService orderService)
+        {
+            List<SelectListItem> Emp = new List<SelectListItem>();//value:empId text:  empName
+            System.Text.StringBuilder fullName = new StringBuilder();
+            var empList = orderService.GetEmp();
+            foreach (var emp in empList)
+            {
+                fullName.Append(emp.FirstName);
+                fullName.Append(" ");
+                fullName.Append(emp.LastName);
+                Emp.Add(new SelectListItem
+                {
+                    Text = fullName.ToString(),
+                    Value = emp.EmployeeID.ToString()
+                });
+                fullName.Clear();
+            }
+
+            return Emp;
+        }
+           
+        /// <summary>
+        /// 得到出貨公司下拉式選單
+        /// </summary>
+        private List<SelectListItem> GetShipperSelect(OrderService orderService)
+        {
+            var shipperList = orderService.GetShipper();
+            List<SelectListItem> shipperID = new List<SelectListItem>();//出貨公司代號
+            foreach (var shipper in shipperList)
+            {
+                shipperID.Add(new SelectListItem
+                {
+                    Text = shipper.CompanyName.ToString(),
+                    Value = shipper.ShipperID.ToString()
+                });
+            }
+            return shipperID;
+        }         
         
     }
 

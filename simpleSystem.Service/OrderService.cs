@@ -20,15 +20,65 @@ namespace SimpleSystem.Service
         {
             //todo
         }
+
         /// <summary>
         /// 依照Id 取得訂單資料
         /// </summary>
         /// <returns></returns>
-        public Models.Order GetOrderById(string orderId)
+        public List<simpleSystem.ViewModels.OrderEditViewModels> GetOrderById(int id)
         {
-            //todo
-            return new Models.Order();
+            Models.originalDB db = new Models.originalDB();
+            var result = db.Orders.Join(db.Customers,
+                                orders => orders.CustomerID,
+                                customers => customers.CustomerID,
+                                (orders, customers) => new { Customers = customers, Orders = orders })
+                                .Join(db.Employees,
+                                orders => orders.Orders.EmployeeID,
+                                employee => employee.EmployeeID,
+                                (orders, employee) => new { Employee = employee, Orders = orders })
+                                .Join(db.Shippers,
+                                orders => orders.Orders.Orders.ShipperID,
+                                shippers => shippers.ShipperID,
+                                (orders, shippers) => new { Shippers = shippers, Orders = orders })
+                                .Join(db.OrderDetails,
+                                orders => orders.Orders.Orders.Orders.OrderID,
+                                orderDetails => orderDetails.OrderID,
+                                (orders, orderDetails) => new { OrderDetails = orderDetails, Orders = orders })
+                                .Join(db.Products,
+                                orderDetails => orderDetails.OrderDetails.ProductID,
+                                products => products.ProductID,
+                                (orderDetails, products) => new { Products = products, OrderDetails = orderDetails })
+
+                                .Where(y => (y.OrderDetails.Orders.Orders.Orders.Orders.OrderID == 10248
+                                ))
+                                .Select(x => new  simpleSystem.ViewModels.OrderEditViewModels
+                                {
+                                    OrderID = x.OrderDetails.Orders.Orders.Orders.Orders.OrderID,
+                                    CustID = x.OrderDetails.Orders.Orders.Orders.Customers.CustomerID,
+                                    CustName = x.OrderDetails.Orders.Orders.Orders.Customers.CompanyName,
+                                    EmpId = x.OrderDetails.Orders.Orders.Orders.Orders.EmployeeID,
+                                    EmployeeFirstName = x.OrderDetails.Orders.Orders.Employee.FirstName,
+                                    EmployeeLastName = x.OrderDetails.Orders.Orders.Employee.LastName,
+                                    OrderDate = x.OrderDetails.Orders.Orders.Orders.Orders.OrderDate,
+                                    RequiredDate = x.OrderDetails.Orders.Orders.Orders.Orders.RequiredDate,
+                                    ShippedDate = x.OrderDetails.Orders.Orders.Orders.Orders.ShippedDate,
+                                    ShipperId = x.OrderDetails.Orders.Orders.Orders.Orders.ShipperID,
+                                    ShipperName = x.OrderDetails.Orders.Shippers.CompanyName,
+                                    Freight = (double)x.OrderDetails.Orders.Orders.Orders.Orders.Freight,
+                                    ShipName = x.OrderDetails.Orders.Orders.Orders.Orders.ShipName,
+                                    ShipAddress = x.OrderDetails.Orders.Orders.Orders.Orders.ShipAddress,
+                                    ShipCity = x.OrderDetails.Orders.Orders.Orders.Orders.ShipCity,
+                                    ShipRegion = x.OrderDetails.Orders.Orders.Orders.Orders.ShipRegion,
+                                    ShipPostalCode = x.OrderDetails.Orders.Orders.Orders.Orders.ShipPostalCode,
+                                    ShipCountry = x.OrderDetails.Orders.Orders.Orders.Orders.ShipCountry,
+                                    Qty = x.OrderDetails.OrderDetails.Qty,
+                                    UnitPrice = (float)x.OrderDetails.OrderDetails.UnitPrice,
+                                    ProductID = x.OrderDetails.OrderDetails.ProductID,
+                                    ProductName = x.Products.ProductName
+                                }).ToList();
+            return result;
         }
+
         /// <summary>
         /// Order/index主畫面的 Shipper預設下拉式選單
         /// </summary>
@@ -170,7 +220,6 @@ namespace SimpleSystem.Service
             }
         }
 
-               
         /// <summary>
         /// 刪除訂單
         /// </summary>
@@ -178,10 +227,19 @@ namespace SimpleSystem.Service
         {
             //todo
         }
+
         /// <summary>
         /// 更新訂單
         /// </summary>
         public void UpdateOrder(Models.Order order)
+        {
+            //todo
+        }
+
+        /// <summary>
+        /// 更新訂單明細
+        /// </summary>
+        public void UpdateOrderDetail(Models.OrderDetail orderDetail)
         {
             //todo
         }

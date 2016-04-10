@@ -209,12 +209,28 @@
 
         //去新增訂單的頁面
         function toCreateView() {
-            document.location.href = "Order/Create";
+
+            var herfArray = document.location.href.split("/");
+            if (herfArray[herfArray.length - 1] == "Index") {
+                document.location.href = "Create/";
+
+            } else {
+
+                document.location.href = "Order/Create/";
+            }
         }
 
         //去修改訂單的頁面
         $(".editButton").click(function (e) {
-            document.location.href = "Order/Edit/" + e.target.value;
+
+            var herfArray = document.location.href.split("/");
+            if (herfArray[herfArray.length - 1] == "Index") {
+                document.location.href = "Edit/" + e.target.value;
+                
+            } else {
+                
+                document.location.href = "Order/Edit/" + e.target.value;
+            }
         });
 
     </script>
