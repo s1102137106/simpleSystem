@@ -84,8 +84,19 @@ namespace SimpleSystem.Service
             {
 
                Models.Order dbOrders  =  db.Orders.Find(oneOrder.OrderID);
-
+               dbOrders.CustomerID = oneOrder.CustomerID;
                dbOrders.EmployeeID = oneOrder.EmployeeID;
+               dbOrders.Freight = (decimal)oneOrder.Freight;
+               dbOrders.OrderDate = (DateTime)oneOrder.OrderDate;
+               dbOrders.RequiredDate = (DateTime)oneOrder.RequiredDate;
+               dbOrders.ShipAddress = oneOrder.ShipAddress;
+               dbOrders.ShipCity = oneOrder.ShipCity;
+               dbOrders.ShipCountry = oneOrder.ShipCountry;
+               dbOrders.ShipName = oneOrder.ShipName;
+               dbOrders.ShippedDate = oneOrder.ShippedDate;
+               dbOrders.ShipperID = oneOrder.ShipperID;
+               dbOrders.ShipPostalCode = oneOrder.ShipPostalCode;
+               dbOrders.ShipRegion = oneOrder.ShipRegion;
 
                var a= db.SaveChanges();
                
