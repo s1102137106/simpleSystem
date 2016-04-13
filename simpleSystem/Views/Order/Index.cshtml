@@ -122,7 +122,7 @@
             <div class="col-md-1">
                 <div class="form-group">
                     <label></label>
-                    <button type="button" onclick="toCreateView()" class="btn  btn-success">新增訂單</button>
+                    <button type="button"  onclick="toCreateView()" class="btn  btn-success">新增訂單</button>
                 </div>
             </div>
         </div>
@@ -177,7 +177,7 @@
                 <td>
                     <div class="row">
                         <button  value="@orders.OrderDd" class="btn btn-warning editButton">修改</button>
-                        <button class="btn btn-danger">刪除</button>
+                        <button value="@orders.OrderDd" class="btn btn-danger deleteButton">刪除</button>
                     </div>
                 </td>
             </tr>
@@ -206,6 +206,18 @@
                 $(targetFormId).submit();
             }
         };
+
+        //刪除訂單
+        $(".deleteButton").click(function toDeleteView(e) {
+            var herfArray = document.location.href.split("/");
+            if (herfArray[herfArray.length - 1] == "Index") {
+                document.location.href = "Delete/" + e.target.value;
+
+            } else {
+
+                document.location.href = "Order/Delete/" + e.target.value;
+            }
+        })
 
         //去新增訂單的頁面
         function toCreateView() {

@@ -240,6 +240,8 @@ namespace eSale.Controllers
             return result;
         }
 
+        
+
         public List<simpleSystem.ViewModels.OrderBy> OrderByList { get; set; }
 
         /// <summary>
@@ -277,18 +279,65 @@ namespace eSale.Controllers
         /// 訂單管理明細
         /// </summary>
         /// <returns></returns>
+        [HttpGet()]
         public ActionResult Detial()
         {
+            return View();
+        }
+
+    
+        /// <summary>
+        /// 加入訂單
+        /// </summary>
+        [HttpGet()]
+        public ActionResult Create()
+        {
+            OrderService orderService = new OrderService();
+            ViewBag.Emps = GetEmpSelect(orderService);
+            ViewBag.ShipperIds = GetShipperSelect(orderService);
+            ViewBag.Customers = GetCustomerSelect(orderService);
+            ViewBag.Products = GetProductSelect(orderService);
             return View();
         }
 
         /// <summary>
         /// 加入訂單
         /// </summary>
-        /// <returns></returns>
-        public ActionResult Create()
+        [HttpPost()]
+        public ContentResult Create(simpleSystem.ViewModels.OrderCreateViewModels createModel)
         {
-            return View();
+            OrderService orderService = new OrderService();
+           
+            Models.Order ModelOrder = new Models.Order
+            {
+                OrderID = createModel.OrderID,
+                CustomerID = createModel.CustID,
+                EmployeeID = createModel.EmpId,
+                Freight = (decimal)createModel.Freight,
+                OrderDate = (DateTime)createModel.OrderDate,
+                RequiredDate = (DateTime)createModel.RequiredDate,
+                ShipAddress = createModel.ShipAddress,
+                ShipCity = createModel.ShipCity,
+                ShipCountry = createModel.ShipCountry,
+                ShipName = createModel.ShipName,
+                ShippedDate = createModel.ShippedDate,
+                ShipperID = createModel.ShipperId,
+                ShipPostalCode = createModel.ShipPostalCode,
+                ShipRegion = createModel.ShipRegion,
+            };
+
+            orderService.InsertOrder(ModelOrder);
+            ContentResult result = new ContentResult();
+            result.Content = "新增成功";
+            return result;
+        }
+
+         [HttpGet()]
+        public RedirectResult Delete(int id)
+        {
+            OrderService orderService = new OrderService();
+            orderService.DeleteOrderById(id);
+            return new RedirectResult("/Order");
         }
 
         public ActionResult GetSysData()

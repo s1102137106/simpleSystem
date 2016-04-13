@@ -18,7 +18,14 @@ namespace SimpleSystem.Service
         /// <param name="order"></param>
         public void InsertOrder(Models.Order order)
         {
-            //todo
+            using (Models.originalDB db = new Models.originalDB())
+            {
+                int max = db.Orders.Select(x => x.OrderID).Max();
+                order.OrderID = max + 1;
+                db.Orders.Add(order);
+                db.SaveChanges();
+            }
+           
         }
 
         /// <summary>
@@ -284,9 +291,14 @@ namespace SimpleSystem.Service
         /// <summary>
         /// 刪除訂單
         /// </summary>
-        public void DeleteOrderById(string orderId)
+        public void DeleteOrderById(int orderId)
         {
-            //todo
+            using (Models.originalDB db = new Models.originalDB())
+            {
+                var deleteRow = db.Orders.Find(orderId);
+                 db.Orders.Remove(deleteRow);
+                 db.SaveChanges();
+            }
         }
 
       
