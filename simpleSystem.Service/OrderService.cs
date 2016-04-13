@@ -49,7 +49,7 @@ namespace SimpleSystem.Service
                                 products => products.ProductID,
                                 (orderDetails, products) => new { Products = products, OrderDetails = orderDetails })
 
-                                .Where(y => (y.OrderDetails.Orders.Orders.Orders.Orders.OrderID == 10248
+                                .Where(y => (y.OrderDetails.Orders.Orders.Orders.Orders.OrderID == id
                                 ))
                                 .Select(x => new  simpleSystem.ViewModels.OrderEditViewModels
                                 {
@@ -71,11 +71,61 @@ namespace SimpleSystem.Service
                                     ShipRegion = x.OrderDetails.Orders.Orders.Orders.Orders.ShipRegion,
                                     ShipPostalCode = x.OrderDetails.Orders.Orders.Orders.Orders.ShipPostalCode,
                                     ShipCountry = x.OrderDetails.Orders.Orders.Orders.Orders.ShipCountry,
-                                    Qty = x.OrderDetails.OrderDetails.Qty,
-                                    UnitPrice = (float)x.OrderDetails.OrderDetails.UnitPrice,
-                                    ProductID = x.OrderDetails.OrderDetails.ProductID,
-                                    ProductName = x.Products.ProductName
+                                    OrderDetail = x.OrderDetails.OrderDetails
                                 }).ToList();
+            return result;
+        }
+        /// <summary>
+        /// 更新訂單
+        /// </summary>
+        /// <param name="訂單"></param>
+        public void UpdateOrder(Models.Order oneOrder){
+            using (Models.originalDB db = new Models.originalDB())
+            {
+
+               Models.Order dbOrders  =  db.Orders.Find(oneOrder.OrderID);
+
+               dbOrders.EmployeeID = oneOrder.EmployeeID;
+
+               var a= db.SaveChanges();
+               
+               
+               // var deleteRow = db.Orders.Find(oneOrder.OrderID);
+               // db.Orders.Remove(deleteRow);
+                
+                
+            }
+        }
+        /// <summary>
+        /// Order/Edit product預設下拉式選單
+        /// </summary>
+        /// <returns></returns>
+        public List<Models.Product> GetProduct()
+        {
+            List<Models.Product> result = new List<Models.Product>();
+            Models.originalDB db = new Models.originalDB();
+
+            var tmpProduct = db.Products.Select(x => new { ProductName = x.ProductName, ProductID = x.ProductID }).ToList();
+            foreach (var product in tmpProduct)
+            {
+                result.Add(new Models.Product { ProductName = product.ProductName, ProductID = product.ProductID });
+            } return result;
+        }
+
+        /// <summary>
+        /// Order/Edit customer預設下拉式選單
+        /// </summary>
+        /// <returns></returns>
+        public List<Models.Customer> GetCustomer()
+        {
+            List<Models.Customer> result = new List<Models.Customer>();
+            Models.originalDB db = new Models.originalDB();
+
+            var tmpCustomer = db.Customers.Select(x => new { CustomerName = x.CompanyName, CustomerID = x.CustomerID }).ToList();
+            foreach (var customer in tmpCustomer)
+            {
+                result.Add(new Models.Customer { CompanyName = customer.CustomerName, CustomerID = customer.CustomerID });
+            } 
             return result;
         }
 
@@ -228,13 +278,7 @@ namespace SimpleSystem.Service
             //todo
         }
 
-        /// <summary>
-        /// 更新訂單
-        /// </summary>
-        public void UpdateOrder(Models.Order order)
-        {
-            //todo
-        }
+      
 
         /// <summary>
         /// 更新訂單明細

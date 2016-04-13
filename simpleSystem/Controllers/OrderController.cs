@@ -154,7 +154,22 @@ namespace eSale.Controllers
             OrderService orderService = new OrderService();
             ViewBag.Emps = GetEmpSelect(orderService);
             ViewBag.ShipperIds = GetShipperSelect(orderService);
+            ViewBag.Customers = GetCustomerSelect(orderService);
+
             List<simpleSystem.ViewModels.OrderEditViewModels> models = orderService.GetOrderById(id);
+
+            #region 加入detail
+            List<Models.OrderDetail> orderDetailList = new List<Models.OrderDetail>();
+            foreach(var tmp in models){
+                orderDetailList.Add(tmp.OrderDetail);
+            }
+            ViewBag.orderDetailList = orderDetailList;
+            ViewBag.Products = GetProductSelect(orderService);
+
+            #endregion
+
+          
+
             simpleSystem.ViewModels.OrderEditViewModels model = new simpleSystem.ViewModels.OrderEditViewModels()
             {
                 CustID = models[0].CustID,
@@ -173,18 +188,26 @@ namespace eSale.Controllers
                 ShipperId = models[0].ShipperId,
                 ShipperName = models[0].ShipperName,
                 ShipPostalCode =models[0].ShipPostalCode,
-                ShipRegion = models[0].ShipRegion
-                
+                ShipRegion = models[0].ShipRegion,
             };
-            #region 處理orderDetails
-                
-                //ProductID 
-                //ProductName
-                //UnitPrice
-                //Qty
+            
+
+            #region 處理date
+            if (models[0].ShippedDate == null)
+            {
+                ViewBag.ShippedDateStr = "";
+            }
+            else
+            {
+                ViewBag.ShippedDateStr = ((DateTime)models[0].ShippedDate).ToString("yyyy-MM-dd");
+            }
+
+            ViewBag.OrderdateStr = ((DateTime)models[0].OrderDate).ToString("yyyy-MM-dd");
+
+            ViewBag.RequiredDateStr = ((DateTime)models[0].RequiredDate).ToString("yyyy-MM-dd");
             #endregion
 
-            return View(models);
+            return View(model);
         }
 
         /// <summary>
@@ -192,6 +215,26 @@ namespace eSale.Controllers
         /// </summary>
         [HttpPost()]
         public ContentResult Edit(simpleSystem.ViewModels.OrderEditViewModels order){
+            OrderService orderService = new OrderService();
+            Models.Order ModelOrder = new Models.Order
+            {
+                OrderID = order.OrderID,
+                CustomerID = order.CustID,
+                EmployeeID = order.EmpId,
+                Freight = (decimal)order.Freight,
+                OrderDate = (DateTime)order.OrderDate,
+                RequiredDate = (DateTime)order.RequiredDate,
+                ShipAddress = order.ShipAddress,
+                ShipCity = order.ShipCity,
+                ShipCountry = order.ShipCountry,
+                ShipName = order.ShipName,
+                ShippedDate = order.ShippedDate,
+                ShipperID = order.ShipperId,
+                ShipPostalCode = order.ShipPostalCode,
+                ShipRegion = order.ShipRegion,
+            };
+
+            orderService.UpdateOrder(ModelOrder);
             ContentResult result =  new  ContentResult();
             result.Content = "更新成功";
             return result;
@@ -309,8 +352,47 @@ namespace eSale.Controllers
                 });
             }
             return shipperID;
-        }         
-        
+        }
+
+        /// <summary>
+        /// 得到產品下拉式選單
+        /// </summary>
+        /// <param name="orderService"></param>
+        /// <returns></returns>
+        private List<SelectListItem> GetProductSelect(OrderService orderService)
+        {
+            var ProductList = orderService.GetProduct();
+            List<SelectListItem> Product = new List<SelectListItem>();//出貨公司代號
+            foreach (var oneProduct in ProductList)
+            {
+                Product.Add(new SelectListItem
+                {
+                    Text = oneProduct.ProductName.ToString(),
+                    Value = oneProduct.ProductID.ToString()
+                });
+            }
+            return Product;
+        }
+
+        /// <summary>
+        /// 得到客戶下拉式選單
+        /// </summary>
+        /// <param name="orderService"></param>
+        /// <returns></returns>
+        private List<SelectListItem> GetCustomerSelect(OrderService orderService)
+        {
+            var Customer = orderService.GetCustomer();
+            List<SelectListItem> CustomerList = new List<SelectListItem>();//出貨公司代號
+            foreach (var oneCustomer in Customer)
+            {
+                CustomerList.Add(new SelectListItem
+                {
+                    Text = oneCustomer.CompanyName.ToString(),
+                    Value = oneCustomer.CustomerID.ToString()
+                });
+            }
+            return CustomerList;
+        }
     }
 
  

@@ -9,10 +9,12 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.OrderID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <label class="control-label col-md-2">訂單編號</label>
             <div class="col-md-10">
-                <input form-control text-box single-line input-validation-error data-val-number="請輸入數字" data-val-required="必填" type="number" class="form-control" id="OrderID" name="OrderID" placeholder="請輸入要查詢的訂單編號" value="@Model.OrderID">
+                @Model.OrderID
             </div>
+            
+            <input class="form-control" id="OrderID" name="OrderID" type="hidden" value="@Model.OrderID">
         </div>
 
 
@@ -20,8 +22,21 @@
         <div class="form-group">
             @Html.LabelFor(model => model.CustName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.CustName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CustName, "", new { @class = "text-danger" })
+                <select id="CustID" name="CustID" class="form-control">
+                    @foreach (var Customer in (List<SelectListItem>)ViewBag.Customers)
+                    {
+                        if (Model.CustID == Int32.Parse(Customer.Value))
+                        {
+                            <option selected value="@Customer.Value">@Customer.Text</option>
+                        }
+                        else
+                        {
+                            <option value="@Customer.Value">@Customer.Text</option>
+                        }
+
+                    }
+                </select>
+
             </div>
         </div>
 
@@ -33,7 +48,7 @@
                 <select id="EmpId" name="EmpId" class="form-control">
                     @foreach (var Emp in (List<SelectListItem>)ViewBag.Emps)
                     {
-                        if (0 == Int32.Parse(Emp.Value))
+                        if (Model.EmpId == Int32.Parse(Emp.Value))
                         {
                             <option selected value="@Emp.Value">@Emp.Text</option>
                         }
@@ -50,24 +65,21 @@
         <div class="form-group">
             @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.OrderDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
+                <input type="date" value="@ViewBag.OrderdateStr" class="form-control" id="OrderDate" name="OrderDate">
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.RequiredDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.RequiredDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.RequiredDate, "", new { @class = "text-danger" })
+                <input type="date" value="@ViewBag.RequiredDateStr" class="form-control" id="RequiredDate" name="RequiredDate">
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.ShippedDate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ShippedDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ShippedDate, "", new { @class = "text-danger" })
+                <input type="date" value="@ViewBag.ShippedDateStr" class="form-control" id="ShippedDate" name="ShippedDate">
             </div>
         </div>
 
@@ -80,7 +92,7 @@
                     <option value="0"></option>
                     @foreach (var ShipperId in (List<SelectListItem>)ViewBag.ShipperIds)
                     {
-                        if (0 == Int32.Parse(ShipperId.Value))
+                        if (@Model.ShipperId == Int32.Parse(ShipperId.Value))
                         {
                             <option selected value="@ShipperId.Value">@ShipperId.Text</option>
                         }
@@ -91,7 +103,7 @@
 
                     }
                 </select>
-             </div>
+            </div>
         </div>
 
         <div class="form-group">
@@ -152,11 +164,46 @@
                 @Html.ValidationMessageFor(model => model.ShipName, "", new { @class = "text-danger" })
             </div>
         </div>
-
-
-
+        <br />
+        <h2 style="font-family:微軟正黑體;">訂單明細</h2>
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
+            <div class="col-md-offset-1 col-md-8">
+                <table class="table table-striped">
+                    <tr>
+                        <th class="col-md-2">產品名稱</th>
+                        <th class="col-md-2">單價</th>
+                        <th class="col-md-2">數量</th>
+                    </tr>
+                    @foreach (var detail in ViewBag.orderDetailList)
+                    {
+                        <tr>
+                            <td>
+                                <select id="ProductID" name="ProductID[]" class="form-control">
+                                    @foreach (var Product in (List<SelectListItem>)ViewBag.Products)
+                                    {
+                                        if (@detail.ProductID == Int32.Parse(Product.Value))
+                                        {
+                                            <option selected value="@Product.Value">@Product.Text</option>
+                                        }
+                                        else
+                                        {
+                                            <option value="@Product.Value">@Product.Text</option>
+                                        }
+
+                                    }
+                                </select>
+                            </td>
+                            <td><input type="number" value="@detail.UnitPrice" class="form-control" id="UnitPrice" name="UnitPrice[]"></td>
+                            <td><input type="number" value="@detail.Qty" class="form-control" id="Qty" name="Qty[]"></td>
+                        </tr>
+                    }
+
+
+                </table>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-8 col-md-10">
                 <input type="submit" value="存檔" class="btn btn-default" />
             </div>
         </div>
