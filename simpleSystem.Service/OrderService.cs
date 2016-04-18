@@ -25,7 +25,7 @@ namespace SimpleSystem.Service
                 db.Orders.Add(order);
                 db.SaveChanges();
             }
-           
+
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace SimpleSystem.Service
 
                                 .Where(y => (y.OrderDetails.Orders.Orders.Orders.Orders.OrderID == id
                                 ))
-                                .Select(x => new  simpleSystem.ViewModels.OrderEditViewModels
+                                .Select(x => new simpleSystem.ViewModels.OrderEditViewModels
                                 {
                                     OrderID = x.OrderDetails.Orders.Orders.Orders.Orders.OrderID,
                                     CustID = x.OrderDetails.Orders.Orders.Orders.Customers.CustomerID,
@@ -86,32 +86,28 @@ namespace SimpleSystem.Service
         /// 更新訂單
         /// </summary>
         /// <param name="訂單"></param>
-        public void UpdateOrder(Models.Order oneOrder){
+        public void UpdateOrder(Models.Order oneOrder)
+        {
             using (Models.originalDB db = new Models.originalDB())
             {
 
-               Models.Order dbOrders  =  db.Orders.Find(oneOrder.OrderID);
-               dbOrders.CustomerID = oneOrder.CustomerID;
-               dbOrders.EmployeeID = oneOrder.EmployeeID;
-               dbOrders.Freight = (decimal)oneOrder.Freight;
-               dbOrders.OrderDate = (DateTime)oneOrder.OrderDate;
-               dbOrders.RequiredDate = (DateTime)oneOrder.RequiredDate;
-               dbOrders.ShipAddress = oneOrder.ShipAddress;
-               dbOrders.ShipCity = oneOrder.ShipCity;
-               dbOrders.ShipCountry = oneOrder.ShipCountry;
-               dbOrders.ShipName = oneOrder.ShipName;
-               dbOrders.ShippedDate = oneOrder.ShippedDate;
-               dbOrders.ShipperID = oneOrder.ShipperID;
-               dbOrders.ShipPostalCode = oneOrder.ShipPostalCode;
-               dbOrders.ShipRegion = oneOrder.ShipRegion;
+                Models.Order dbOrders = db.Orders.Find(oneOrder.OrderID);
+                dbOrders.CustomerID = oneOrder.CustomerID;
+                dbOrders.EmployeeID = oneOrder.EmployeeID;
+                dbOrders.Freight = (decimal)oneOrder.Freight;
+                dbOrders.OrderDate = (DateTime)oneOrder.OrderDate;
+                dbOrders.RequiredDate = (DateTime)oneOrder.RequiredDate;
+                dbOrders.ShipAddress = oneOrder.ShipAddress;
+                dbOrders.ShipCity = oneOrder.ShipCity;
+                dbOrders.ShipCountry = oneOrder.ShipCountry;
+                dbOrders.ShipName = oneOrder.ShipName;
+                dbOrders.ShippedDate = oneOrder.ShippedDate;
+                dbOrders.ShipperID = oneOrder.ShipperID;
+                dbOrders.ShipPostalCode = oneOrder.ShipPostalCode;
+                dbOrders.ShipRegion = oneOrder.ShipRegion;
+                dbOrders.OrderDetails = oneOrder.OrderDetails;
+                var a = db.SaveChanges();
 
-               var a= db.SaveChanges();
-               
-               
-               // var deleteRow = db.Orders.Find(oneOrder.OrderID);
-               // db.Orders.Remove(deleteRow);
-                
-                
             }
         }
         /// <summary>
@@ -143,7 +139,7 @@ namespace SimpleSystem.Service
             foreach (var customer in tmpCustomer)
             {
                 result.Add(new Models.Customer { CompanyName = customer.CustomerName, CustomerID = customer.CustomerID });
-            } 
+            }
             return result;
         }
 
@@ -296,12 +292,43 @@ namespace SimpleSystem.Service
             using (Models.originalDB db = new Models.originalDB())
             {
                 var deleteRow = db.Orders.Find(orderId);
-                 db.Orders.Remove(deleteRow);
-                 db.SaveChanges();
+                foreach (var orderDetail in deleteRow.OrderDetails)
+                {
+                  //  DeleteOrderDetailById(orderDetail.OrderID, orderDetail.ProductID);
+                }
+
+              //  deleteRow.OrderDetails = new HashSet<Models.OrderDetail>();
+
+
+                db.Orders.Remove(deleteRow);
+                db.SaveChanges();
             }
         }
 
-      
+        /// <summary>
+        /// 刪除訂單明細
+        /// </summary>
+        public void DeleteOrderDetailById(int orderId, int productId)
+        {
+
+            using (Models.originalDB db = new Models.originalDB())
+            {
+
+                //List<Models.OrderDetail> dbOrderDetails = db.OrderDetails.Select(x => new Models.Order { ProductID = x.ProductID, OrderID = x.OrderID }).Where(y => (y.OrderID == orderId) && (y.ProductID == productId)).ToList();
+
+                int[] par = new int[2];
+                par[0] = orderId;
+                par[1] = productId;
+                var deleteRow = db.OrderDetails.Find(orderId,productId);
+
+                db.OrderDetails.Remove(deleteRow);
+                
+                db.SaveChanges();
+            }
+
+        }
+
+
 
         /// <summary>
         /// 更新訂單明細

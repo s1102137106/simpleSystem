@@ -24,7 +24,7 @@ namespace eSale.Controllers
             nullCondition.OrderBy = new simpleSystem.ViewModels.OrderBy { OrderByid = OrderByID[0], OrderByStrings = OrderByStrings[0] };
             nullCondition.OrderByid = OrderByID[0];
             IPagedList<simpleSystem.ViewModels.Order> orderList = orderService.GetOrderByCondtion(nullCondition);
-            
+
 
             ViewBag.condition = nullCondition;//空白的查詢條件
             ViewBag.Data = orderList;//傳回搜尋結果
@@ -43,7 +43,7 @@ namespace eSale.Controllers
             {
                 OrderByList.Add(new simpleSystem.ViewModels.OrderBy
                 {
-                    OrderByid =  OrderByID[i],
+                    OrderByid = OrderByID[i],
                     OrderByStrings = OrderByStrings[i],
                 });
             }
@@ -77,7 +77,7 @@ namespace eSale.Controllers
             ViewBag.condition = condition;//將查詢結果傳回給前端
             OrderService orderService = new OrderService();
             IPagedList<simpleSystem.ViewModels.Order> orderList = orderService.GetOrderByCondtion(condition, condition.Page);
-           
+
             ViewBag.Data = orderList;
 
             //員工選單
@@ -146,7 +146,7 @@ namespace eSale.Controllers
         }
 
         /// <summary>
-        /// 修改訂單
+        /// 顯示預設修改訂單
         /// </summary>
         [HttpGet()]
         public ActionResult Edit(int id)
@@ -160,7 +160,8 @@ namespace eSale.Controllers
 
             #region 加入detail
             List<Models.OrderDetail> orderDetailList = new List<Models.OrderDetail>();
-            foreach(var tmp in models){
+            foreach (var tmp in models)
+            {
                 orderDetailList.Add(tmp.OrderDetail);
             }
             ViewBag.orderDetailList = orderDetailList;
@@ -168,7 +169,7 @@ namespace eSale.Controllers
 
             #endregion
 
-          
+
 
             simpleSystem.ViewModels.OrderEditViewModels model = new simpleSystem.ViewModels.OrderEditViewModels()
             {
@@ -179,18 +180,18 @@ namespace eSale.Controllers
                 Freight = models[0].Freight,
                 OrderDate = models[0].OrderDate,
                 OrderID = models[0].OrderID,
-                RequiredDate =models[0].RequiredDate,
-                ShipAddress =models[0].ShipAddress,
-                ShipCity =models[0].ShipCity,
-                ShipCountry =models[0].ShipCountry,
+                RequiredDate = models[0].RequiredDate,
+                ShipAddress = models[0].ShipAddress,
+                ShipCity = models[0].ShipCity,
+                ShipCountry = models[0].ShipCountry,
                 ShipName = models[0].ShipName,
                 ShippedDate = models[0].ShippedDate,
                 ShipperId = models[0].ShipperId,
                 ShipperName = models[0].ShipperName,
-                ShipPostalCode =models[0].ShipPostalCode,
+                ShipPostalCode = models[0].ShipPostalCode,
                 ShipRegion = models[0].ShipRegion,
             };
-            
+
 
             #region 處理date
             if (models[0].ShippedDate == null)
@@ -214,7 +215,8 @@ namespace eSale.Controllers
         /// 修改訂單(得到需要更新的資料)
         /// </summary>
         [HttpPost()]
-        public ContentResult Edit(simpleSystem.ViewModels.OrderEditViewModels order){
+        public ContentResult Edit(simpleSystem.ViewModels.OrderEditViewModels order)
+        {
             OrderService orderService = new OrderService();
             Models.Order ModelOrder = new Models.Order
             {
@@ -232,15 +234,28 @@ namespace eSale.Controllers
                 ShipperID = order.ShipperId,
                 ShipPostalCode = order.ShipPostalCode,
                 ShipRegion = order.ShipRegion,
+                OrderDetails = new HashSet<Models.OrderDetail>()
             };
 
+           
+            int sum = 0;
+            foreach (var oneOrder in ModelOrder.OrderDetails)
+            {
+                 oneOrder.OrderID = order.OrderID;
+                 oneOrder.ProductID = order.ProductID[sum];
+                 oneOrder.Qty = (short)order.Qty[sum];
+                 oneOrder.UnitPrice = (decimal)order.UnitPrice[sum];
+                 sum = sum + 1;
+            }
+
+           
             orderService.UpdateOrder(ModelOrder);
-            ContentResult result =  new  ContentResult();
+            ContentResult result = new ContentResult();
             result.Content = "更新成功";
             return result;
         }
 
-        
+
 
         public List<simpleSystem.ViewModels.OrderBy> OrderByList { get; set; }
 
@@ -259,10 +274,10 @@ namespace eSale.Controllers
             "依照出貨日期由大到小",
          };
 
-         /// <summary>
+        /// <summary>
         /// 定義排序顯示欄位
         /// </summary>
-         private string[] OrderByID = new string[8]
+        private string[] OrderByID = new string[8]
          { "OrderDd",
             "CustName",
             "OrderdateStr",
@@ -272,20 +287,7 @@ namespace eSale.Controllers
             "OrderdateStrDesc",
             "ShippedDateStrDesc",
         };
-        
-        
 
-        /// <summary>
-        /// 訂單管理明細
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet()]
-        public ActionResult Detial()
-        {
-            return View();
-        }
-
-    
         /// <summary>
         /// 加入訂單
         /// </summary>
@@ -307,7 +309,7 @@ namespace eSale.Controllers
         public ContentResult Create(simpleSystem.ViewModels.OrderCreateViewModels createModel)
         {
             OrderService orderService = new OrderService();
-           
+
             Models.Order ModelOrder = new Models.Order
             {
                 OrderID = createModel.OrderID,
@@ -324,7 +326,19 @@ namespace eSale.Controllers
                 ShipperID = createModel.ShipperId,
                 ShipPostalCode = createModel.ShipPostalCode,
                 ShipRegion = createModel.ShipRegion,
+                OrderDetails = new HashSet<Models.OrderDetail>()
             };
+            int sum = 0;
+            foreach (var tmp in createModel.ProductID)
+            {
+                ModelOrder.OrderDetails.Add(new Models.OrderDetail
+                {
+                    ProductID = createModel.ProductID[sum],
+                    Qty = (short)createModel.Qty[sum],
+                    UnitPrice = (decimal)createModel.UnitPrice[sum]
+                });
+                sum = sum + 1;
+            }
 
             orderService.InsertOrder(ModelOrder);
             ContentResult result = new ContentResult();
@@ -332,7 +346,12 @@ namespace eSale.Controllers
             return result;
         }
 
-         [HttpGet()]
+        /// <summary>
+        /// 刪除訂單
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet()]
         public RedirectResult Delete(int id)
         {
             OrderService orderService = new OrderService();
@@ -340,24 +359,8 @@ namespace eSale.Controllers
             return new RedirectResult("/Order");
         }
 
-        public ActionResult GetSysData()
-        {
-            return PartialView("_SysDatePartial");
-        }
 
-        [HttpPost()]
-        public ActionResult InsertOrder(simpleSystem.ViewModels.Order order)
-        {
-            if (ModelState.IsValid)
-            {
-                ViewBag.Hello = "ViewBag歡迎光臨";
-                TempData["Hello"] = "TempData歡迎光臨";
-                return RedirectToAction("Index");
 
-            }
-            return View(order);
-            //return View();
-        }
 
 
         /// <summary>
@@ -384,7 +387,7 @@ namespace eSale.Controllers
 
             return Emp;
         }
-           
+
         /// <summary>
         /// 得到出貨公司下拉式選單
         /// </summary>
@@ -444,5 +447,5 @@ namespace eSale.Controllers
         }
     }
 
- 
+
 }

@@ -137,6 +137,7 @@
     <Content Include="Views\Order\Edit.cshtml" />
     <Content Include="Views\Order\Create.cshtml" />
     <Content Include="Views\Order\Partial_Create.cshtml" />
+    <Content Include="Views\Order\Partial_Create2.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

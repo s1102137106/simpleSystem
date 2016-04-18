@@ -19,11 +19,11 @@
                     {
                         if (0 == Int32.Parse(Customer.Value))
                         {
-                    <option selected value="@Customer.Value">@Customer.Text</option>
+                            <option selected value="@Customer.Value">@Customer.Text</option>
                         }
                         else
                         {
-                    <option value="@Customer.Value">@Customer.Text</option>
+                            <option value="@Customer.Value">@Customer.Text</option>
                         }
 
                     }
@@ -155,6 +155,7 @@
             </div>
         </div>
         <h2 style="font-family:微軟正黑體;">訂單明細</h2>
+        <button type="button" onclick="partialCreate()" class="btn btn-success editButton">新增產品</button>
         <div class="form-group">
             <div class="col-md-offset-1 col-md-8">
                 <table id="productTable" class="table table-striped">
@@ -175,10 +176,10 @@
                 <input type="submit" value="新增訂單" class="btn btn-default" />
             </div>
         </div>
-        
+
     </div>
 
-   
+
 }
 
 
@@ -186,5 +187,11 @@
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 <script type="text/javascript">
+ 
+    function partialCreate() {
+        $("#productTable").append("@Html.Partial("Partial_Create2")");
 
+       
+
+    }
 </script>
