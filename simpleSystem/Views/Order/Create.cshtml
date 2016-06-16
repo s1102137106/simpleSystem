@@ -1,20 +1,21 @@
 ﻿@model simpleSystem.ViewModels.OrderCreateViewModels
 
+@{
+    Layout = "~/Views/Shared/_LayoutKendo.cshtml";
+}
+<h1 style="font-family:微軟正黑體;">新增訂單</h1>
+<hr />
 
-@using (Html.BeginForm("Create", "Order"))
-{
-    @Html.AntiForgeryToken()
+<div class="demo-section k-content">
+    <form id="employeeForm" data-role="validator" novalidate="novalidate" action="/Order/Create" method="post" role="form">
 
-    <div class="form-horizontal">
-        <h1 style="font-family:微軟正黑體;">新增訂單</h1>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.CustName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+        <ul id="fieldlist">
+            <li>
+                @Html.LabelFor(model => model.CustName, htmlAttributes: new { @for = "" })
                 <select id="CustID" name="CustID" class="form-control">
-                    <option value="0">請選擇客戶</option>
+                    <option value=" 0">
+                        請選擇客戶
+                    </option>
                     @foreach (var Customer in (List<SelectListItem>)ViewBag.Customers)
                     {
                         if (0 == Int32.Parse(Customer.Value))
@@ -28,15 +29,9 @@
 
                     }
                 </select>
-
-            </div>
-        </div>
-
-
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.EmpName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            </li>
+            <li>
+                @Html.LabelFor(model => model.EmpName, htmlAttributes: new { @for = "" })
                 <select id="EmpId" name="EmpId" class="form-control">
                     <option value="0">請選擇負責員工</option>
                     @foreach (var Emp in (List<SelectListItem>)ViewBag.Emps)
@@ -52,35 +47,25 @@
 
                     }
                 </select>
-            </div>
+            </li>
+            <li>
+                @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @for = "" })
+                <input type="text" data-role='datepicker' id="OrderDate" name="OrderDate" data-type="date" required="required" />
+                <span data-for='OrderDate' class='k-invalid-msg'></span>
+            </li>
+            <li>
+                @Html.LabelFor(model => model.RequiredDate, htmlAttributes: new { @for = "" })
+                <input type="text" data-role='datepicker' id="RequiredDate" name="RequiredDate" data-type="date" data-greaterdate-field="OrderDate" data-greaterdate-msg='需要日期需大於訂單日期' />
+                <span data-for='RequiredDate' class='k-invalid-msg'></span>
+            </li>
+            <li>
+                @Html.LabelFor(model => model.ShippedDate, htmlAttributes: new { @for = "" })
+                <input type="text" data-role='datepicker' id="ShippedDate" name="ShippedDate" data-type="date" data-greaterdate-field="OrderDate" data-greaterdate-msg='出貨日期需大於訂單日期' />
+                <span data-for='ShippedDate' class='k-invalid-msg'></span>
+            </li>
 
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <input type="date" class="form-control" id="OrderDate" name="OrderDate">
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.RequiredDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <input type="date" class="form-control" id="RequiredDate" name="RequiredDate">
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ShippedDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <input type="date" class="form-control" id="ShippedDate" name="ShippedDate">
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ShipperName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            <li>
+                @Html.LabelFor(model => model.ShipperName, htmlAttributes: new { @for = "" })
                 <select id="ShipperId" name="ShipperId" class="form-control">
                     <option value="0">請選擇出貨公司</option>
                     @foreach (var ShipperId in (List<SelectListItem>)ViewBag.ShipperIds)
@@ -96,64 +81,43 @@
 
                     }
                 </select>
-            </div>
-        </div>
+            </li>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Freight, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Freight, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Freight, "", new { @class = "text-danger" })
-            </div>
-        </div>
+            <li>
+                @Html.LabelFor(model => model.Freight, htmlAttributes: new { @for = "" })
+                <input type="number" min="0" class="k-textbox" name="FirstName" id="Freight" required="required" />
+            </li>
+            <li>
+                @Html.LabelFor(model => model.ShipName, htmlAttributes: new { @for = "" })
+                <input type="text" class="k-textbox" name="ShipName" id="ShipName" required="required" />
+            </li>
+            <li>
+                @Html.LabelFor(model => model.ShipAddress, htmlAttributes: new { @for = "" })
+                <input type="text" class="k-textbox" name="ShipAddress" id="ShipAddress" required="required" />
+            </li>
+            <li>
+                @Html.LabelFor(model => model.ShipCity, htmlAttributes: new { @for = "" })
+                <input type="text" class="k-textbox" name="ShipCity" id="ShipCity" required="required" />
+            </li>
+            <li>
+                @Html.LabelFor(model => model.ShipRegion, htmlAttributes: new { @for = "" })
+                <input type="text" class="k-textbox" name="ShipRegion" id="ShipRegion" required="required" />
+            </li>
+            <li>
+                @Html.LabelFor(model => model.ShipPostalCode, htmlAttributes: new { @for = "" })
+                <input type="text" class="k-textbox" name="ShipPostalCode" id="ShipPostalCode" required="required" />
+            </li>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ShipName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ShipName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ShipName, "", new { @class = "text-danger" })
-            </div>
-        </div>
+            <li>
+                @Html.LabelFor(model => model.ShipCountry, htmlAttributes: new { @for = "" })
+                <input type="text" class="k-textbox" name="ShipCountry" id="ShipCountry" required="required" />
+            </li>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ShipAddress, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ShipAddress, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ShipAddress, "", new { @class = "text-danger" })
-            </div>
-        </div>
+            <li>
+                <button type="submit" class="k-primary" data-role="button" data-click='save'>新增訂單</button>
+            </li>
+        </ul>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.ShipCity, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ShipCity, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ShipCity, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ShipRegion, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ShipRegion, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ShipRegion, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ShipPostalCode, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ShipPostalCode, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ShipPostalCode, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ShipCountry, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.ShipCountry, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ShipCountry, "", new { @class = "text-danger" })
-            </div>
-        </div>
         <h2 style="font-family:微軟正黑體;">訂單明細</h2>
         <button type="button" onclick="partialCreate()" class="btn btn-success editButton">新增產品</button>
         <div class="form-group">
@@ -166,32 +130,104 @@
                     </tr>
 
                     @Html.Partial("Partial_Create")
-                    @Html.Partial("Partial_Create")
+
                 </table>
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-8 col-md-10">
-                <input type="submit" value="新增訂單" class="btn btn-default" />
-            </div>
-        </div>
-
-    </div>
+    </form>
+</div>
 
 
-}
 
 
-<script src="~/Scripts/jquery-1.10.2.min.js"></script>
-<script src="~/Scripts/jquery.validate.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+
+
 <script type="text/javascript">
- 
-    function partialCreate() {
-        $("#productTable").append("@Html.Partial("Partial_Create2")");
+    var index = 0;//代表解除隱藏到到幾個
+    function changeId() {
 
-       
 
     }
+
+    function partialCreate() {
+        // 2016/06/14 解決
+        $("#productTable").append($("#ProductTr").clone());
+    }
+
+    $(function () {
+        var container = $("#employeeForm");
+        kendo.init(container);
+        container.kendoValidator({
+            rules: {
+                greaterdate: function (input) {
+                    if (input.is("[data-greaterdate-msg]") && input.val() != "") {
+                        var date = kendo.parseDate(input.val()),
+                            otherDate = kendo.parseDate($("[name='" + input.data("greaterdateField") + "']").val());
+                        return otherDate == null || otherDate.getTime() < date.getTime();
+                    }
+
+                    return true;
+                }
+            }
+        });
+    });
+
+    function save(e) {
+        var validator = $("#employeeForm").data("kendoValidator");
+        if (validator.validate()) {
+            alert("訂單新增成功");
+        }
+    }
+    $(document).ready(function () {
+        $("#CustID").kendoComboBox();
+        $("#EmpId").kendoComboBox();
+        $("#ShipperId").kendoComboBox();
+
+    });
 </script>
+<style>
+    #fieldlist {
+        margin: 0;
+        padding: 0;
+    }
+
+        #fieldlist li {
+            list-style: none;
+            padding-bottom: .7em;
+            text-align: left;
+        }
+
+        #fieldlist label {
+            display: block;
+            padding-bottom: .3em;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 12px;
+            color: #444;
+        }
+
+        #fieldlist li .k-widget:not(.k-tooltip),
+        #fieldlist li .k-textbox {
+            margin: 0 5px 5px 0;
+        }
+
+    span.k-widget.k-tooltip-validation {
+        display: inline;
+        inline-block;
+        width: 160px;
+        text-align: left;
+        border: 0;
+        padding: 0;
+        margin: 0;
+        background: none;
+        box-shadow: none;
+        color: red;
+    }
+
+    .k-tooltip-validation .k-warning {
+        display: none;
+    }
+</style>
