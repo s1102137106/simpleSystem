@@ -106,7 +106,6 @@
     <Content Include="fonts\DejaVu\LICENSE.txt" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="fonts\glyphs\KendoUIGlyphs.svg" />
-    <Content Include="fonts\KendoUIGlyphs.svg" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -129,9 +128,6 @@
     <Content Include="fonts\glyphs\KendoUIGlyphs.eot" />
     <Content Include="fonts\glyphs\KendoUIGlyphs.ttf" />
     <Content Include="fonts\glyphs\KendoUIGlyphs.woff" />
-    <Content Include="fonts\KendoUIGlyphs.eot" />
-    <Content Include="fonts\KendoUIGlyphs.ttf" />
-    <Content Include="fonts\KendoUIGlyphs.woff" />
     <Content Include="Content\images\KendoUIGlyphs.eot" />
     <Content Include="Content\images\KendoUIGlyphs.ttf" />
     <Content Include="Content\images\KendoUIGlyphs.woff" />
