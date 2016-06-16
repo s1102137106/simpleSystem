@@ -127,6 +127,7 @@
                         <th class="col-md-2">產品名稱</th>
                         <th class="col-md-2">單價</th>
                         <th class="col-md-2">數量</th>
+                        <th class="col-md-2"></th>
                     </tr>
 
                     @Html.Partial("Partial_Create")
@@ -146,16 +147,28 @@
 
 
 <script type="text/javascript">
-    var index = 0;//代表解除隱藏到到幾個
-    function changeId() {
-
-
-    }
-
+    var index = 1;//代表解除隱藏到到幾個
+    var tempTr;
     function partialCreate() {
         // 2016/06/14 解決
-        $("#productTable").append($("#ProductTr").clone());
+        var temp = $("#ProductTr").clone();
+        var tableTr = $("#productTable tr");
+        temp[0].id = temp[0].id + index;
+        index++;
+        $("#productTable").append(temp);
+        deleteButton = $("#" + temp[0].id + " button");
+    
+        deleteButton[0].value = index - 1;
+        console.log(deleteButton[0]);
+        deleteButton.click(function (e) {
+            console.log(e.target.value);
+            console.log($("#ProductTr" + e.target.value));
+            $("#ProductTr" + e.target.value).remove();
+
+        });
     }
+
+
 
     $(function () {
         var container = $("#employeeForm");
@@ -185,6 +198,7 @@
         $("#CustID").kendoComboBox();
         $("#EmpId").kendoComboBox();
         $("#ShipperId").kendoComboBox();
+
 
     });
 </script>
